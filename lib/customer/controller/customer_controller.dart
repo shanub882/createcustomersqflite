@@ -177,13 +177,13 @@ class CustomerController extends GetxController {
   var countryname = ["India", "UAE", "Saudi Arabia"].obs;
   var items = ['DR', 'CR'];
   var pricecategoryList = ["Salesprice1", "Salesprice2", "Salesprice3"].obs;
-  RxString selectedPriceCategory = "".obs;
+  RxString selectedPriceCategory = "Salesprice1".obs;
   var countryList = ["India", "UAE", "Saudi Arabia"].obs;
   var selectedCountry = "India".obs;
   var selectedCountryName = "India".obs;
-  final RxString selectedTaxTreatmentText = ''.obs;
+  final RxString selectedTaxTreatmentText = '1'.obs;
   var taxId = "1".obs;
-  var taxTreatmentType = ''.obs;
+  var taxTreatmentType = '1'.obs;
   void updateTaxTreatment(String value) {
     selectedTaxTreatmentText.value = value;
     taxId.value = value;

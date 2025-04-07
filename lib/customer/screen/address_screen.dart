@@ -21,6 +21,16 @@ class AddressContainer extends StatefulWidget {
 class _AddressContainerState extends State<AddressContainer> {
   CustomerController customerController = Get.put(CustomerController());
 
+   final FocusNode labelFocus = FocusNode();
+  final FocusNode buildingNumberFocus = FocusNode();
+    final FocusNode streetNameFocus = FocusNode();
+    final FocusNode streetNameArabicFocus = FocusNode();
+    final FocusNode districtNameFocus = FocusNode();
+    final FocusNode districtNameArabicFocus = FocusNode();
+    final FocusNode stateNameFocus = FocusNode();
+     final FocusNode stateNameArabicFocus = FocusNode();
+      final FocusNode postalCodeFocus = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -52,6 +62,10 @@ class _AddressContainerState extends State<AddressContainer> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                          focusNode: labelFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(buildingNumberFocus);
+                            },
                         controller: customerController.label[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
                         // initialValue: addresslist.label,
@@ -71,6 +85,10 @@ class _AddressContainerState extends State<AddressContainer> {
                     SizedBox(width: screenSize.width * 0.02),
                     Expanded(
                       child: TextFormField(
+                          focusNode: buildingNumberFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(streetNameFocus);
+                            },
                         controller:
                             customerController.buildingNumber[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
@@ -111,6 +129,10 @@ class _AddressContainerState extends State<AddressContainer> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                          focusNode: streetNameFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(streetNameArabicFocus);
+                            },
                         controller: customerController.streetName[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
                         // initialValue: addresslist.streetName,
@@ -130,6 +152,10 @@ class _AddressContainerState extends State<AddressContainer> {
                     SizedBox(width: screenSize.width * 0.02),
                     Expanded(
                       child: TextFormField(
+                          focusNode: streetNameArabicFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(districtNameFocus);
+                            },
                         controller:
                             customerController.streetNameArabic[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
@@ -161,6 +187,10 @@ class _AddressContainerState extends State<AddressContainer> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                          focusNode: districtNameFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(districtNameArabicFocus);
+                            },
                         controller: customerController.district[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
                         // initialValue: addresslist.district,
@@ -182,6 +212,10 @@ class _AddressContainerState extends State<AddressContainer> {
                     SizedBox(width: screenSize.width * 0.02),
                     Expanded(
                       child: TextFormField(
+                          focusNode: districtNameArabicFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(stateNameFocus);
+                            },
                         controller:
                             customerController.districtArabic[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
@@ -213,6 +247,10 @@ class _AddressContainerState extends State<AddressContainer> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                          focusNode: stateNameFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(stateNameArabicFocus);
+                            },
                         controller: customerController.state[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
                         // initialValue: addresslist.state,
@@ -234,6 +272,10 @@ class _AddressContainerState extends State<AddressContainer> {
                     SizedBox(width: screenSize.width * 0.02),
                     Expanded(
                       child: TextFormField(
+                          focusNode: stateNameArabicFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(postalCodeFocus);
+                            },
                         controller:
                             customerController.stateArabic[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
@@ -264,6 +306,10 @@ class _AddressContainerState extends State<AddressContainer> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                          focusNode: postalCodeFocus,
+                            // onEditingComplete: () {
+                            //   FocusScope.of(context).requestFocus(ledgerNameFocus);
+                            // },
                         controller: customerController.postalCode[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
                         keyboardType: const TextInputType.numberWithOptions(

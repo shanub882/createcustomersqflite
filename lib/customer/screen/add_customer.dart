@@ -47,6 +47,19 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
     super.initState();
   }
 
+  final FocusNode customercodeFocus = FocusNode();
+  final FocusNode ledgerNameFocus = FocusNode();
+    final FocusNode registeredNameFocus = FocusNode();
+    final FocusNode registerednameArabicFocus = FocusNode();
+    final FocusNode balanceFocus = FocusNode();
+    // final FocusNode dropdownFocus = FocusNode();
+    // final FocusNode selectDateFocus = FocusNode();
+    final FocusNode creditPeriodFocus = FocusNode();
+    final FocusNode creditLimitFocus = FocusNode();
+    final FocusNode idNoFocus = FocusNode();
+    final FocusNode salesDiscountFocus = FocusNode();
+    
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -81,6 +94,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           TextFormField(
+                            focusNode: customercodeFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(ledgerNameFocus);
+                            },
                             controller: customerController.customerCode,
                             cursorColor: Color(0xFFFFFFFF),
                             style: customiseStyle(
@@ -103,6 +120,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                           ),
                           SizedBox(height: screenSize.height * 0.02),
                           TextFormField(
+                             focusNode: ledgerNameFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(registeredNameFocus);
+                            },
                             controller: customerController.ledgernameController,
                             cursorColor: Color(0xFFFFFFFF),
                             style: customiseStyle(
@@ -120,6 +141,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                           ),
                           SizedBox(height: screenSize.height * 0.02),
                           TextFormField(
+                              focusNode: registeredNameFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(registerednameArabicFocus);
+                            },
                             controller:
                                 customerController.registerednameController,
                             cursorColor: Color(0xFFFFFFFF),
@@ -134,6 +159,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                           ),
                           SizedBox(height: screenSize.height * 0.02),
                           TextFormField(
+                            focusNode: registerednameArabicFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(balanceFocus);
+                            },
                             controller:
                                 customerController
                                     .registerednameArabicController,
@@ -149,6 +178,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                           ),
                           SizedBox(height: screenSize.height * 0.02),
                           TextFormField(
+                            focusNode: balanceFocus,
+                            // onEditingComplete: () {
+                            //   FocusScope.of(context).requestFocus(dropdownFocus);
+                            // },
                             controller: customerController.balance,
                             cursorColor: Color(0xFFFFFFFF),
                             style: customiseStyle(
@@ -181,6 +214,8 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                             child: DropdownButtonHideUnderline(
                               child: Obx(() {
                                 return DropdownButton<String>(
+                                  // focusNode: dropdownFocus,
+                          
                                   isExpanded: true,
                                   style: customiseStyle(
                                     const Color(0xFFFFFFFF),
@@ -220,6 +255,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                       customerController.dropdownvalue.value =
                                           value;
                                     }
+                                    
                                   },
                                 );
                               }),
@@ -242,6 +278,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                             },
                             child: AbsorbPointer(
                               child: TextFormField(
+                              
                                 readOnly: true,
                                 controller: customerController.dateController,
                                 cursorColor: Color(0xFFFFFFFF),
@@ -1323,6 +1360,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                 ),
                                                               ),
                                                               TextFormField(
+                                                                  focusNode: creditPeriodFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(creditLimitFocus);
+                            },
                                                                 controller:
                                                                     customerController
                                                                         .creditPeriod,
@@ -1384,6 +1425,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                 ),
                                                               ),
                                                               TextFormField(
+                                                                focusNode: creditLimitFocus,
+                            // onEditingComplete: () {
+                            //   FocusScope.of(context).requestFocus(creditLimitFocus);
+                            // },
                                                                 controller:
                                                                     customerController
                                                                         .creditLimit,
@@ -1652,6 +1697,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                 ),
                                                               ),
                                                               TextFormField(
+                                                                focusNode: idNoFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(salesDiscountFocus);
+                            },
                                                                 controller:
                                                                     customerController
                                                                         .idNo,
@@ -1721,6 +1770,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                 ),
                                                               ),
                                                               TextFormField(
+                                                                focusNode: salesDiscountFocus,
+                            // onEditingComplete: () {
+                            //   FocusScope.of(context).requestFocus(creditLimitFocus);
+                            // },
                                                                 controller:
                                                                     customerController
                                                                         .salesDiscount,

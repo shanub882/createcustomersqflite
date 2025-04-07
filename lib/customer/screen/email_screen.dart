@@ -21,6 +21,8 @@ class EmailContainer extends StatefulWidget {
 class _EmailContainerState extends State<EmailContainer> {
   CustomerController customerController = Get.put(CustomerController());
 
+    final FocusNode emailTypeFocus = FocusNode();
+  final FocusNode emailAddressFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,10 @@ class _EmailContainerState extends State<EmailContainer> {
                       children: [
                         Expanded(
                           child: TextFormField(
+                              focusNode: emailTypeFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(emailAddressFocus);
+                            },
                             controller: customerController.emailType[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
                             // initialValue: emaillist.type,
@@ -74,6 +80,10 @@ class _EmailContainerState extends State<EmailContainer> {
                         SizedBox(width: screenSize.width * 0.02),
                         Expanded(
                           child: TextFormField(
+                              focusNode: emailAddressFocus,
+                            // onEditingComplete: () {
+                            //   FocusScope.of(context).requestFocus(ledgerNameFocus);
+                            // },
                             controller: customerController.Email[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
                             // initialValue: emaillist.Email,

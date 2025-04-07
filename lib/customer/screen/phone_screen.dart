@@ -21,6 +21,9 @@ class PhoneContainer extends StatefulWidget {
 class _PhoneContainerState extends State<PhoneContainer> {
   CustomerController customerController = Get.put(CustomerController());
 
+  final FocusNode phoneTypeFocus = FocusNode();
+  final FocusNode phoneNumberFocus = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -58,6 +61,10 @@ class _PhoneContainerState extends State<PhoneContainer> {
                         children: [
                           Expanded(
                             child: TextFormField(
+                                focusNode: phoneTypeFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(phoneNumberFocus);
+                            },
                               controller: customerController.phoneType[widget.index],
                               cursorColor: Color(0xFFFFFFFF),
                               // initialValue: phonelist.type,
@@ -76,6 +83,10 @@ class _PhoneContainerState extends State<PhoneContainer> {
                           SizedBox(width: screenSize.width * 0.02),
                           Expanded(
                             child: TextFormField(
+                                focusNode: phoneNumberFocus,
+                            // onEditingComplete: () {
+                            //   FocusScope.of(context).requestFocus(ledgerNameFocus);
+                            // },
                               controller: customerController.phoneno[widget.index],
                               cursorColor: Color(0xFFFFFFFF),
                               // initialValue: phonelist.phoneno,

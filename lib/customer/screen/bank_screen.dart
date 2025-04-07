@@ -20,6 +20,13 @@ class BankContainer extends StatefulWidget {
 class _BankContainerState extends State<BankContainer> {
   CustomerController customerController = Get.put(CustomerController());
 
+  
+  final FocusNode bankLabelFocus = FocusNode();
+  final FocusNode bankNameFocus = FocusNode();
+    final FocusNode accountNameFocus = FocusNode();
+    final FocusNode accountNumberFocus = FocusNode();
+    final FocusNode ifscFocus = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -54,6 +61,10 @@ class _BankContainerState extends State<BankContainer> {
                       children: [
                         Expanded(
                           child: TextFormField(
+                            focusNode: bankLabelFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(bankNameFocus);
+                            },
                             controller: customerController.bankLabel[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
                             // initialValue: banklist.label,
@@ -72,6 +83,10 @@ class _BankContainerState extends State<BankContainer> {
                         SizedBox(width: screenSize.width * 0.02),
                         Expanded(
                           child: TextFormField(
+                            focusNode: bankNameFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(accountNameFocus);
+                            },
                             controller: customerController.bankname[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
                             // initialValue: banklist.bankname,
@@ -99,6 +114,10 @@ class _BankContainerState extends State<BankContainer> {
                       children: [
                         Expanded(
                           child: TextFormField(
+                            focusNode: accountNameFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(accountNumberFocus);
+                            },
                             controller: customerController.accountname[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
                             // initialValue: banklist.accountname,
@@ -117,6 +136,10 @@ class _BankContainerState extends State<BankContainer> {
                         SizedBox(width: screenSize.width * 0.02),
                         Expanded(
                           child: TextFormField(
+                            focusNode: accountNumberFocus,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(ifscFocus);
+                            },
                             controller: customerController.accountno[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
                             // initialValue: banklist.accountno,
@@ -150,6 +173,8 @@ class _BankContainerState extends State<BankContainer> {
                       children: [
                         Expanded(
                           child: TextFormField(
+                            focusNode: ifscFocus,
+                         
                             controller: customerController.ifsccode[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
                             // initialValue: banklist.ifsccode,
