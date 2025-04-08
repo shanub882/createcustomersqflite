@@ -27,7 +27,7 @@ class AddressModel {
     this.postalCode = '',
     this.state = '',
     this.stateArabic = '',
-    this.country = '',
+    this.country = 'India',
     this.customerId=0
   });
 

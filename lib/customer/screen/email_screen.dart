@@ -1,18 +1,20 @@
 
 
-import 'package:customerdata_sqflite/customer/controller/customer_controller.dart';
+import 'package:customerdata_sqflite/customer/controller/customerController.dart';
 import 'package:customerdata_sqflite/customer/global/global.dart';
-
+import 'package:customerdata_sqflite/customer/model/email_model.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class EmailContainer extends StatefulWidget {
   final int index;
   final VoidCallback onRemove;
+  final EmailModel emailModel;
 
   const EmailContainer(
-      {super.key, required this.index, required this.onRemove});
+      {super.key, required this.index, required this.onRemove,required this.emailModel});
 
   @override
   State<EmailContainer> createState() => _EmailContainerState();
@@ -62,13 +64,13 @@ class _EmailContainerState extends State<EmailContainer> {
                             onEditingComplete: () {
                               FocusScope.of(context).requestFocus(emailAddressFocus);
                             },
-                            controller: customerController.emailType[widget.index],
+                            // controller: customerController.emailType[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
-                            // initialValue: emaillist.type,
+                            initialValue: widget.emailModel.type,
                             onChanged: (value) {
-                              // emaillist.type = value;
-                              // customerController.updateEmail(
-                              //     widget.index, emaillist);
+                              widget.emailModel.type = value;
+                               customerController.updateEmail(
+                                    widget.emailModel);
                             },
                             style: customiseStyle(
                                 const Color(0xFFFFFFFF), FontWeight.w500, 14.0),
@@ -84,13 +86,18 @@ class _EmailContainerState extends State<EmailContainer> {
                             // onEditingComplete: () {
                             //   FocusScope.of(context).requestFocus(ledgerNameFocus);
                             // },
-                            controller: customerController.Email[widget.index],
+                            // controller: customerController.Email[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
-                            // initialValue: emaillist.Email,
+                            initialValue: widget.emailModel.Email,
+                             keyboardType: TextInputType.emailAddress,
+                            //  inputFormatters: [
+                            //     FilteringTextInputFormatter.allow(
+                            //         RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")),
+                            //   ],
                             onChanged: (value) {
-                              // emaillist.Email = value;
-                              // customerController.updateEmail(
-                              //     widget.index, emaillist);
+                              widget.emailModel.Email = value;
+                              customerController.updateEmail(
+                                  widget.emailModel);
                             },
                             style: customiseStyle(
                                 const Color(0xFFFFFFFF), FontWeight.w500, 14.0),

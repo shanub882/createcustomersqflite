@@ -1,14 +1,10 @@
-import 'dart:developer';
-
-import 'package:customerdata_sqflite/customer/controller/customer_controller.dart';
+import 'package:customerdata_sqflite/customer/controller/customerController.dart';
 import 'package:customerdata_sqflite/customer/global/global.dart';
 import 'package:customerdata_sqflite/customer/model/address_model.dart';
-import 'package:customerdata_sqflite/customer/model/bank_model.dart';
 import 'package:customerdata_sqflite/customer/model/customer_model.dart';
-import 'package:customerdata_sqflite/customer/model/email_model.dart';
 import 'package:customerdata_sqflite/customer/model/phone_model.dart';
 import 'package:customerdata_sqflite/customer/model/transaction_model.dart';
-import 'package:customerdata_sqflite/customer/screen/address_screen.dart';
+import 'package:customerdata_sqflite/customer/screen/addressScreen.dart';
 import 'package:customerdata_sqflite/customer/screen/bank_screen.dart';
 import 'package:customerdata_sqflite/customer/screen/email_screen.dart';
 import 'package:customerdata_sqflite/customer/screen/phone_screen.dart';
@@ -38,10 +34,36 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
   void initState() {
     if (widget.edit) {
       customerController.getCustomerData(widget.customerId);
-      customerController.getAddressData(widget.customerId);
-      customerController.getMobileData(widget.customerId);
-      customerController.getEmailData(widget.customerId);
-      customerController.getBankData(widget.customerId);
+      // customerController.getAddressData(widget.customerId);
+      // customerController.getMobileData(widget.customerId);
+      // customerController.getEmailData(widget.customerId);
+      // customerController.getBankData(widget.customerId);
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        customerController.customerCode.clear();
+        customerController.ledgernameController.clear();
+        customerController.registerednameController.clear();
+        customerController.registerednameArabicController.clear();
+        customerController.balance.clear();
+        customerController.dateController.clear();
+
+        customerController.address.clear();
+        customerController.phone.clear();
+        customerController.email.clear();
+        customerController.bank.clear();
+
+        customerController.creditLimit.clear();
+        customerController.creditPeriod.clear();
+        customerController.idNo.clear();
+        customerController.salesDiscount.clear();
+        customerController.billwise.value = false;
+        customerController.isactive.value = false;
+        customerController.taxNoController.clear();
+
+        customerController.ismorecontact.value = false;
+        customerController.ismoretransaction.value = false;
+        customerController.ismorebank.value = false;
+      });
     }
 
     super.initState();
@@ -49,42 +71,42 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
 
   final FocusNode customercodeFocus = FocusNode();
   final FocusNode ledgerNameFocus = FocusNode();
-    final FocusNode registeredNameFocus = FocusNode();
-    final FocusNode registerednameArabicFocus = FocusNode();
-    final FocusNode balanceFocus = FocusNode();
-    // final FocusNode dropdownFocus = FocusNode();
-    // final FocusNode selectDateFocus = FocusNode();
-    final FocusNode creditPeriodFocus = FocusNode();
-    final FocusNode creditLimitFocus = FocusNode();
-    final FocusNode idNoFocus = FocusNode();
-    final FocusNode salesDiscountFocus = FocusNode();
-    
+  final FocusNode registeredNameFocus = FocusNode();
+  final FocusNode registerednameArabicFocus = FocusNode();
+  final FocusNode balanceFocus = FocusNode();
+  // final FocusNode dropdownFocus = FocusNode();
+  // final FocusNode selectDateFocus = FocusNode();
+  final FocusNode creditPeriodFocus = FocusNode();
+  final FocusNode creditLimitFocus = FocusNode();
+  final FocusNode idNoFocus = FocusNode();
+  final FocusNode salesDiscountFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xFF000000),
+      backgroundColor: const Color(0xFF000000),
       appBar: AppBar(
+        // leading: Icon(Icons.arrow_back,color: Color(0xFFFFFFFF)),
         centerTitle: false,
-        backgroundColor: Color(0xFF000000),
+        backgroundColor: const Color(0xFFFFFFFF),
         title: Text(
           widget.edit ? "Edit Customer" : "Create Customer",
-          style: customiseStyle(const Color(0xFFFFFFFF), FontWeight.bold, 18.0),
+          style: customiseStyle(const Color(0xFF000000), FontWeight.bold, 18.0),
         ),
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color(0xFF212121),
               borderRadius: BorderRadius.all(Radius.circular(5)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     Form(
@@ -96,10 +118,12 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                           TextFormField(
                             focusNode: customercodeFocus,
                             onEditingComplete: () {
-                              FocusScope.of(context).requestFocus(ledgerNameFocus);
+                              FocusScope.of(
+                                context,
+                              ).requestFocus(ledgerNameFocus);
                             },
                             controller: customerController.customerCode,
-                            cursorColor: Color(0xFFFFFFFF),
+                            cursorColor: const Color(0xFFFFFFFF),
                             style: customiseStyle(
                               const Color(0xFFFFFFFF),
                               FontWeight.w500,
@@ -120,12 +144,14 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                           ),
                           SizedBox(height: screenSize.height * 0.02),
                           TextFormField(
-                             focusNode: ledgerNameFocus,
+                            focusNode: ledgerNameFocus,
                             onEditingComplete: () {
-                              FocusScope.of(context).requestFocus(registeredNameFocus);
+                              FocusScope.of(
+                                context,
+                              ).requestFocus(registeredNameFocus);
                             },
                             controller: customerController.ledgernameController,
-                            cursorColor: Color(0xFFFFFFFF),
+                            cursorColor: const Color(0xFFFFFFFF),
                             style: customiseStyle(
                               const Color(0xFFFFFFFF),
                               FontWeight.w500,
@@ -141,13 +167,15 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                           ),
                           SizedBox(height: screenSize.height * 0.02),
                           TextFormField(
-                              focusNode: registeredNameFocus,
+                            focusNode: registeredNameFocus,
                             onEditingComplete: () {
-                              FocusScope.of(context).requestFocus(registerednameArabicFocus);
+                              FocusScope.of(
+                                context,
+                              ).requestFocus(registerednameArabicFocus);
                             },
                             controller:
                                 customerController.registerednameController,
-                            cursorColor: Color(0xFFFFFFFF),
+                            cursorColor: const Color(0xFFFFFFFF),
                             style: customiseStyle(
                               const Color(0xFFFFFFFF),
                               FontWeight.w500,
@@ -166,7 +194,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                             controller:
                                 customerController
                                     .registerednameArabicController,
-                            cursorColor: Color(0xFFFFFFFF),
+                            cursorColor: const Color(0xFFFFFFFF),
                             style: customiseStyle(
                               const Color(0xFFFFFFFF),
                               FontWeight.w500,
@@ -183,7 +211,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                             //   FocusScope.of(context).requestFocus(dropdownFocus);
                             // },
                             controller: customerController.balance,
-                            cursorColor: Color(0xFFFFFFFF),
+                            cursorColor: const Color(0xFFFFFFFF),
                             style: customiseStyle(
                               const Color(0xFFFFFFFF),
                               FontWeight.w500,
@@ -203,7 +231,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                           SizedBox(height: screenSize.height * 0.02),
                           Container(
                             width: screenSize.width,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(color: Color(0xFFFFFFFF)),
                               ),
@@ -215,7 +243,6 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                               child: Obx(() {
                                 return DropdownButton<String>(
                                   // focusNode: dropdownFocus,
-                          
                                   isExpanded: true,
                                   style: customiseStyle(
                                     const Color(0xFFFFFFFF),
@@ -255,7 +282,6 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                       customerController.dropdownvalue.value =
                                           value;
                                     }
-                                    
                                   },
                                 );
                               }),
@@ -278,10 +304,9 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                             },
                             child: AbsorbPointer(
                               child: TextFormField(
-                              
                                 readOnly: true,
                                 controller: customerController.dateController,
-                                cursorColor: Color(0xFFFFFFFF),
+                                cursorColor: const Color(0xFFFFFFFF),
                                 style: customiseStyle(
                                   const Color(0xFFFFFFFF),
                                   FontWeight.w500,
@@ -289,7 +314,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                 ),
                                 decoration: newDesignTextfield(
                                   hintText: 'Select Date',
-                                  suffixIcon: Icon(
+                                  suffixIcon: const Icon(
                                     Icons.calendar_today,
                                     color: Colors.white,
                                   ),
@@ -320,7 +345,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                     ),
                                     inactiveThumbColor: Colors.white,
                                     inactiveTrackColor: const Color(0xFF212121),
-                                    activeTrackColor: Color(0xFF004775),
+                                    activeTrackColor: const Color(0xFF004775),
                                     value:
                                         customerController.ismorecontact.value,
                                     onChanged: (value) async {
@@ -337,7 +362,13 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                           SizedBox(height: screenSize.height * 0.01),
                           Obx(
                             () =>
-                                customerController.ismorecontact.value
+                                customerController.ismorecontact.value ||
+                                        widget.edit == true &&
+                                            customerController
+                                                .address
+                                                .isNotEmpty ||
+                                        customerController.phone.isNotEmpty ||
+                                        customerController.email.isNotEmpty
                                     ? Column(
                                       children: [
                                         Column(
@@ -359,11 +390,17 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                 GestureDetector(
                                                   onTap: () {
                                                     customerController
-                                                        .addAddress();
+                                                        .addAddress(
+                                                          customerId:
+                                                              widget.edit
+                                                                  ? widget
+                                                                      .customerId
+                                                                  : 0,
+                                                        );
                                                   },
                                                   child: Row(
                                                     children: [
-                                                      Icon(
+                                                      const Icon(
                                                         Icons.add,
                                                         color: Color(
                                                           0xFF10C103,
@@ -384,63 +421,67 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                 ),
                                               ],
                                             ),
-                                            widget.edit == true &&
-                                                    customerController
-                                                        .address
-                                                        .isNotEmpty
-                                                ? Obx(() {
-                                                  return ListView.separated(
-                                                    separatorBuilder: (
-                                                      context,
-                                                      index,
-                                                    ) {
-                                                      return Divider(
-                                                        color:
-                                                            Colors.transparent,
-                                                      );
-                                                    },
-                                                    shrinkWrap: true,
-                                                    physics:
-                                                        NeverScrollableScrollPhysics(),
-                                                    itemCount:
-                                                        customerController
-                                                            .address
-                                                            .length,
-                                                    itemBuilder: (
-                                                      context,
-                                                      index,
-                                                    ) {
-                                                      return AddressContainer(
-                                                        index: index,
-                                                        onRemove:
-                                                            () => customerController
-                                                                .removeAddress(
-                                                                  index,
-                                                                ),
-                                                      );
-                                                    },
-                                                  );
-                                                })
-                                                : SizedBox(),
-                                            Obx(
-                                              () => ListView.separated(
+                                            Obx(() {
+                                              final filteredAddresses =
+                                                  widget.edit
+                                                      ? customerController
+                                                          .address
+                                                          .where(
+                                                            (e) =>
+                                                                e.customerId ==
+                                                                widget
+                                                                    .customerId,
+                                                          )
+                                                          .toList()
+                                                      : customerController
+                                                          .address
+                                                          .where(
+                                                            (e) =>
+                                                                e.customerId ==
+                                                                0,
+                                                          )
+                                                          .toList();
+                                              return ListView.separated(
                                                 separatorBuilder: (
                                                   context,
                                                   index,
                                                 ) {
-                                                  return Divider(
+                                                  return const Divider(
                                                     color: Colors.transparent,
                                                   );
                                                 },
                                                 shrinkWrap: true,
                                                 physics:
-                                                    NeverScrollableScrollPhysics(),
+                                                    const NeverScrollableScrollPhysics(),
                                                 itemCount:
-                                                    customerController
-                                                        .addressList
-                                                        .length,
+                                                    filteredAddresses.length,
+                                                // widget.edit
+                                                //     ? customerController
+                                                //         .address
+                                                //          .where((e) =>
+                                                //             e.customerId == widget.customerId)
+                                                //         .length
+                                                //     : customerController.address
+                                                //         .where((e) =>
+                                                //             e.customerId == 0)
+                                                //         .length,
                                                 itemBuilder: (context, index) {
                                                   return AddressContainer(
+                                                    addressModel:
+                                                        filteredAddresses[index],
+                                                    // widget.edit
+                                                    //     ? customerController
+                                                    //         .address
+                                                    //           .where((e) =>
+                                                    //             e.customerId ==
+                                                    //             widget.customerId).toList()
+                                                    //         [index]
+                                                    //     : customerController
+                                                    //         .address
+                                                    //         .where((e) =>
+                                                    //             e.customerId ==
+                                                    //             0)
+                                                    //         .toList()[index],
                                                     index: index,
                                                     onRemove:
                                                         () => customerController
@@ -449,8 +490,8 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                             ),
                                                   );
                                                 },
-                                              ),
-                                            ),
+                                              );
+                                            }),
                                             SizedBox(
                                               height: screenSize.height * 0.01,
                                             ),
@@ -472,21 +513,19 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                     14.0,
                                                   ),
                                                 ),
-
                                                 GestureDetector(
                                                   onTap: () {
-                                                    print(
-                                                      'phoneList1.length ${customerController.phoneList.length}',
-                                                    );
-                                                    customerController
-                                                        .addPhone();
-                                                    print(
-                                                      'phoneList2.length ${customerController.phoneList.length}',
+                                                    customerController.addPhone(
+                                                      customerId:
+                                                          widget.edit
+                                                              ? widget
+                                                                  .customerId
+                                                              : 0,
                                                     );
                                                   },
                                                   child: Row(
                                                     children: [
-                                                      Icon(
+                                                      const Icon(
                                                         Icons.add,
                                                         color: Color(
                                                           0xFF10C103,
@@ -510,39 +549,49 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                             SizedBox(
                                               height: screenSize.height * 0.01,
                                             ),
-                                            Obx(
-                                              () => ListView.separated(
+                                            Obx(() {
+                                              final filteredPhone =
+                                                  widget.edit
+                                                      ? customerController.phone
+                                                          .where(
+                                                            (e) =>
+                                                                e.customerId ==
+                                                                widget
+                                                                    .customerId,
+                                                          )
+                                                          .toList()
+                                                      : customerController.phone
+                                                          .where(
+                                                            (e) =>
+                                                                e.customerId ==
+                                                                0,
+                                                          )
+                                                          .toList();
+                                              return ListView.separated(
                                                 separatorBuilder: (
                                                   context,
                                                   index,
                                                 ) {
-                                                  return Divider(
+                                                  return const Divider(
                                                     color: Colors.transparent,
                                                   );
                                                 },
                                                 shrinkWrap: true,
                                                 physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                itemCount:
-                                                    customerController
-                                                        .phoneList
-                                                        .length,
-
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemCount: filteredPhone.length,
                                                 itemBuilder: (context, index) {
-                                                  return
-                                                  // CustomContainer(
-                                                  //  no:customerController.phoneno[index].text,
-                                                  //  type: customerController.phoneType[index].text,
-                                                  // ) ;
-                                                  PhoneContainer(
+                                                  return PhoneContainer(
+                                                    phoneModel:
+                                                        filteredPhone[index],
                                                     index: index,
                                                     onRemove:
                                                         () => customerController
                                                             .removePhone(index),
                                                   );
                                                 },
-                                              ),
-                                            ),
+                                              );
+                                            }),
                                           ],
                                         ),
                                         Column(
@@ -563,12 +612,17 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                 ),
                                                 GestureDetector(
                                                   onTap: () {
-                                                    customerController
-                                                        .addemail();
+                                                    customerController.addemail(
+                                                      customerId:
+                                                          widget.edit
+                                                              ? widget
+                                                                  .customerId
+                                                              : 0,
+                                                    );
                                                   },
                                                   child: Row(
                                                     children: [
-                                                      Icon(
+                                                      const Icon(
                                                         Icons.add,
                                                         color: Color(
                                                           0xFF10C103,
@@ -592,40 +646,55 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                             SizedBox(
                                               height: screenSize.height * 0.01,
                                             ),
-                                            Obx(
-                                              () => ListView.separated(
+                                            Obx(() {
+                                              final filteredEmail =
+                                                  widget.edit
+                                                      ? customerController.email
+                                                          .where(
+                                                            (e) =>
+                                                                e.customerId ==
+                                                                widget
+                                                                    .customerId,
+                                                          )
+                                                          .toList()
+                                                      : customerController.email
+                                                          .where(
+                                                            (e) =>
+                                                                e.customerId ==
+                                                                0,
+                                                          )
+                                                          .toList();
+                                              return ListView.separated(
                                                 separatorBuilder: (
                                                   context,
                                                   index,
                                                 ) {
-                                                  return Divider(
+                                                  return const Divider(
                                                     color: Colors.transparent,
                                                   );
                                                 },
                                                 shrinkWrap: true,
                                                 physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                itemCount:
-                                                    customerController
-                                                        .emailList
-                                                        .length,
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemCount: filteredEmail.length,
                                                 itemBuilder: (context, index) {
                                                   return EmailContainer(
+                                                    emailModel:
+                                                        filteredEmail[index],
                                                     index: index,
                                                     onRemove:
                                                         () => customerController
                                                             .removeEmail(index),
                                                   );
                                                 },
-                                              ),
-                                            ),
+                                              );
+                                            }),
                                           ],
                                         ),
                                       ],
                                     )
-                                    : SizedBox(),
+                                    : const SizedBox(),
                           ),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -648,7 +717,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                     ),
                                     inactiveThumbColor: Colors.white,
                                     inactiveTrackColor: const Color(0xFF212121),
-                                    activeTrackColor: Color(0xFF004775),
+                                    activeTrackColor: const Color(0xFF004775),
                                     value:
                                         customerController
                                             .ismoretransaction
@@ -678,9 +747,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                             border: Border.all(
                                               color: Colors.grey,
                                             ),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(5),
-                                            ),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                  Radius.circular(5),
+                                                ),
                                           ),
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -876,7 +946,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                             width:
                                                                 screenSize
                                                                     .width,
-                                                            decoration: BoxDecoration(
+                                                            decoration: const BoxDecoration(
                                                               border: Border(
                                                                 bottom: BorderSide(
                                                                   color: Color(
@@ -984,7 +1054,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                             width:
                                                                 screenSize
                                                                     .width,
-                                                            decoration: BoxDecoration(
+                                                            decoration: const BoxDecoration(
                                                               border: Border(
                                                                 bottom: BorderSide(
                                                                   color: Color(
@@ -1102,7 +1172,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                             width:
                                                                 screenSize
                                                                     .width,
-                                                            decoration: BoxDecoration(
+                                                            decoration: const BoxDecoration(
                                                               border: Border(
                                                                 bottom: BorderSide(
                                                                   color: Color(
@@ -1210,12 +1280,6 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                           customerController
                                                                               .taxId
                                                                               .value = value;
-                                                                          log(
-                                                                            'Selected customerController.taxId.value: ${customerController.taxId.value}',
-                                                                          );
-                                                                          log(
-                                                                            'Selected s  customerController.selectedTaxTreatmentText.value: ${customerController.selectedTaxTreatmentText.value}',
-                                                                          );
                                                                         }
                                                                       },
                                                                     );
@@ -1252,14 +1316,14 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                         14.0,
                                                                       ),
                                                                     )
-                                                                    : SizedBox(),
+                                                                    : const SizedBox(),
                                                                 customerController
                                                                             .taxId
                                                                             .value !=
                                                                         "1"
                                                                     ? TextFormField(
                                                                       cursorColor:
-                                                                          Color(
+                                                                          const Color(
                                                                             0xFFFFFFFF,
                                                                           ),
                                                                       controller:
@@ -1321,7 +1385,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                         return null;
                                                                       },
                                                                     )
-                                                                    : SizedBox(),
+                                                                    : const SizedBox(),
                                                               ],
                                                             ),
                                                           ),
@@ -1360,15 +1424,20 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                 ),
                                                               ),
                                                               TextFormField(
-                                                                  focusNode: creditPeriodFocus,
-                            onEditingComplete: () {
-                              FocusScope.of(context).requestFocus(creditLimitFocus);
-                            },
+                                                                focusNode:
+                                                                    creditPeriodFocus,
+                                                                onEditingComplete: () {
+                                                                  FocusScope.of(
+                                                                    context,
+                                                                  ).requestFocus(
+                                                                    creditLimitFocus,
+                                                                  );
+                                                                },
                                                                 controller:
                                                                     customerController
                                                                         .creditPeriod,
                                                                 cursorColor:
-                                                                    Color(
+                                                                    const Color(
                                                                       0xFFFFFFFF,
                                                                     ),
                                                                 style: customiseStyle(
@@ -1425,15 +1494,16 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                 ),
                                                               ),
                                                               TextFormField(
-                                                                focusNode: creditLimitFocus,
-                            // onEditingComplete: () {
-                            //   FocusScope.of(context).requestFocus(creditLimitFocus);
-                            // },
+                                                                focusNode:
+                                                                    creditLimitFocus,
+                                                                // onEditingComplete: () {
+                                                                //   FocusScope.of(context).requestFocus(creditLimitFocus);
+                                                                // },
                                                                 controller:
                                                                     customerController
                                                                         .creditLimit,
                                                                 cursorColor:
-                                                                    Color(
+                                                                    const Color(
                                                                       0xFFFFFFFF,
                                                                     ),
                                                                 style: customiseStyle(
@@ -1481,9 +1551,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                       () => Row(
                                                         children: [
                                                           Checkbox(
-                                                            activeColor: Color(
-                                                              0xFF004775,
-                                                            ),
+                                                            activeColor:
+                                                                const Color(
+                                                                  0xFF004775,
+                                                                ),
                                                             value:
                                                                 customerController
                                                                     .billwise
@@ -1523,9 +1594,10 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                 customerController
                                                                     .isactive
                                                                     .value,
-                                                            activeColor: Color(
-                                                              0xFF004775,
-                                                            ),
+                                                            activeColor:
+                                                                const Color(
+                                                                  0xFF004775,
+                                                                ),
                                                             shape: RoundedRectangleBorder(
                                                               borderRadius:
                                                                   BorderRadius.circular(
@@ -1576,7 +1648,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                             width:
                                                                 screenSize
                                                                     .width,
-                                                            decoration: BoxDecoration(
+                                                            decoration: const BoxDecoration(
                                                               border: Border(
                                                                 bottom: BorderSide(
                                                                   color: Color(
@@ -1697,15 +1769,20 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                 ),
                                                               ),
                                                               TextFormField(
-                                                                focusNode: idNoFocus,
-                            onEditingComplete: () {
-                              FocusScope.of(context).requestFocus(salesDiscountFocus);
-                            },
+                                                                focusNode:
+                                                                    idNoFocus,
+                                                                onEditingComplete: () {
+                                                                  FocusScope.of(
+                                                                    context,
+                                                                  ).requestFocus(
+                                                                    salesDiscountFocus,
+                                                                  );
+                                                                },
                                                                 controller:
                                                                     customerController
                                                                         .idNo,
                                                                 cursorColor:
-                                                                    Color(
+                                                                    const Color(
                                                                       0xFFFFFFFF,
                                                                     ),
                                                                 style: customiseStyle(
@@ -1770,15 +1847,16 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                                 ),
                                                               ),
                                                               TextFormField(
-                                                                focusNode: salesDiscountFocus,
-                            // onEditingComplete: () {
-                            //   FocusScope.of(context).requestFocus(creditLimitFocus);
-                            // },
+                                                                focusNode:
+                                                                    salesDiscountFocus,
+                                                                // onEditingComplete: () {
+                                                                //   FocusScope.of(context).requestFocus(creditLimitFocus);
+                                                                // },
                                                                 controller:
                                                                     customerController
                                                                         .salesDiscount,
                                                                 cursorColor:
-                                                                    Color(
+                                                                    const Color(
                                                                       0xFFFFFFFF,
                                                                     ),
                                                                 style: customiseStyle(
@@ -1870,9 +1948,8 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                         ),
                                       ],
                                     )
-                                    : SizedBox(),
+                                    : const SizedBox(),
                           ),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -1895,7 +1972,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                     ),
                                     inactiveThumbColor: Colors.white,
                                     inactiveTrackColor: const Color(0xFF212121),
-                                    activeTrackColor: Color(0xFF004775),
+                                    activeTrackColor: const Color(0xFF004775),
                                     value: customerController.ismorebank.value,
                                     onChanged: (value) async {
                                       customerController.ismorebank.value =
@@ -1909,7 +1986,9 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                           SizedBox(height: screenSize.height * 0.01),
                           Obx(
                             () =>
-                                customerController.ismorebank.value
+                                customerController.ismorebank.value ||
+                                        widget.edit == true &&
+                                            customerController.bank.isNotEmpty
                                     ? Column(
                                       children: [
                                         Column(
@@ -1930,12 +2009,17 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                 ),
                                                 GestureDetector(
                                                   onTap: () {
-                                                    customerController
-                                                        .addBank();
+                                                    customerController.addBank(
+                                                      customerId:
+                                                          widget.edit
+                                                              ? widget
+                                                                  .customerId
+                                                              : 0,
+                                                    );
                                                   },
                                                   child: Row(
                                                     children: [
-                                                      Icon(
+                                                      const Icon(
                                                         Icons.add,
                                                         color: Color(
                                                           0xFF10C103,
@@ -1956,33 +2040,49 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                 ),
                                               ],
                                             ),
-                                            Obx(
-                                              () => ListView.separated(
+                                            Obx(() {
+                                              final filteredBank =
+                                                  widget.edit
+                                                      ? customerController.bank
+                                                          .where(
+                                                            (e) =>
+                                                                e.customerId ==
+                                                                widget
+                                                                    .customerId,
+                                                          )
+                                                          .toList()
+                                                      : customerController.bank
+                                                          .where(
+                                                            (e) =>
+                                                                e.customerId ==
+                                                                0,
+                                                          )
+                                                          .toList();
+                                              return ListView.separated(
                                                 separatorBuilder: (
                                                   context,
                                                   index,
                                                 ) {
-                                                  return Divider(
+                                                  return const Divider(
                                                     color: Colors.transparent,
                                                   );
                                                 },
                                                 shrinkWrap: true,
                                                 physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                itemCount:
-                                                    customerController
-                                                        .bankList
-                                                        .length,
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemCount: filteredBank.length,
                                                 itemBuilder: (context, index) {
                                                   return BankContainer(
+                                                    bankModel:
+                                                        filteredBank[index],
                                                     index: index,
                                                     onRemove:
                                                         () => customerController
                                                             .removeBank(index),
                                                   );
                                                 },
-                                              ),
-                                            ),
+                                              );
+                                            }),
                                             SizedBox(
                                               height: screenSize.height * 0.01,
                                             ),
@@ -1990,9 +2090,8 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                         ),
                                       ],
                                     )
-                                    : SizedBox(),
+                                    : const SizedBox(),
                           ),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -2028,95 +2127,46 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
 
                                     final List<AddressModel>
                                     updatedAddressModel =
-                                        customerController.label
+                                        customerController.address
+                                            .where(
+                                              (e) =>
+                                                  e.customerId ==
+                                                  widget.customerId,
+                                            )
+                                            .toList()
                                             .asMap()
                                             .map((index, value) {
-                                              return MapEntry(
-                                                index,
-                                                AddressModel(
-                                                  customerId: model.id ?? 0,
-                                                  label: value.text,
-                                                  buildingNumber:
-                                                      customerController
-                                                          .buildingNumber[index]
-                                                          .text,
-                                                  streetName:
-                                                      customerController
-                                                          .streetName[index]
-                                                          .text,
-                                                  streetNameArabic:
-                                                      customerController
-                                                          .streetNameArabic[index]
-                                                          .text,
-                                                  district:
-                                                      customerController
-                                                          .district[index]
-                                                          .text,
-                                                  districtArabic:
-                                                      customerController
-                                                          .districtArabic[index]
-                                                          .text,
-                                                  state:
-                                                      customerController
-                                                          .state[index]
-                                                          .text,
-                                                  stateArabic:
-                                                      customerController
-                                                          .stateArabic[index]
-                                                          .text,
-                                                  postalCode:
-                                                      customerController
-                                                          .postalCode[index]
-                                                          .text,
-                                                  country:
-                                                      customerController
-                                                          .selectedCountry
-                                                          .value,
-                                                ),
-                                              );
+                                              return MapEntry(index, value);
                                             })
                                             .values
                                             .toList();
 
                                     final List<PhoneModel> updatedPhoneModel =
-                                        customerController.phoneno
+                                        customerController.phone
+                                            .where(
+                                              (e) =>
+                                                  e.customerId ==
+                                                  widget.customerId,
+                                            )
+                                            .toList()
                                             .asMap()
                                             .map((index, value) {
-                                              return MapEntry(
-                                                index,
-                                                PhoneModel(
-                                                  customerId: model.id ?? 0,
-                                                  type:
-                                                      customerController
-                                                          .phoneType[index]
-                                                          .text,
-                                                  phoneno:
-                                                      customerController
-                                                          .phoneno[index]
-                                                          .text,
-                                                ),
-                                              );
+                                              return MapEntry(index, value);
                                             })
                                             .values
                                             .toList();
 
                                     final updatedEmailModel =
-                                        customerController.Email.asMap()
+                                        customerController.email
+                                            .where(
+                                              (e) =>
+                                                  e.customerId ==
+                                                  widget.customerId,
+                                            )
+                                            .toList()
+                                            .asMap()
                                             .map((key, value) {
-                                              return MapEntry(
-                                                key,
-                                                EmailModel(
-                                                  customerId: model.id ?? 0,
-                                                  type:
-                                                      customerController
-                                                          .emailType[key]
-                                                          .text,
-                                                  Email:
-                                                      customerController
-                                                          .Email[key]
-                                                          .text,
-                                                ),
-                                              );
+                                              return MapEntry(key, value);
                                             })
                                             .values
                                             .toList();
@@ -2155,39 +2205,24 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                             customerController
                                                 .taxTreatmentType
                                                 .value,
+                                        taxNumber:
+                                            customerController
+                                                .taxNoController
+                                                .text,
                                       ),
                                     ];
 
                                     final updatedBankModel =
-                                        customerController.bankname
+                                        customerController.bank
+                                            .where(
+                                              (e) =>
+                                                  e.customerId ==
+                                                  widget.customerId,
+                                            )
+                                            .toList()
                                             .asMap()
                                             .map((key, value) {
-                                              return MapEntry(
-                                                key,
-                                                BankModel(
-                                                  accountname:
-                                                      customerController
-                                                          .accountname[key]
-                                                          .text,
-                                                  accountno:
-                                                      customerController
-                                                          .accountno[key]
-                                                          .text,
-                                                  bankname:
-                                                      customerController
-                                                          .bankname[key]
-                                                          .text,
-                                                  customerId: model.id ?? 0,
-                                                  ifsccode:
-                                                      customerController
-                                                          .ifsccode[key]
-                                                          .text,
-                                                  label:
-                                                      customerController
-                                                          .bankLabel[key]
-                                                          .text,
-                                                ),
-                                              );
+                                              return MapEntry(key, value);
                                             })
                                             .values
                                             .toList();
@@ -2213,6 +2248,14 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                         .clear();
                                     customerController.balance.clear();
                                     customerController.dateController.clear();
+
+                                    customerController.creditLimit.clear();
+                                    customerController.creditPeriod.clear();
+                                    customerController.idNo.clear();
+                                    customerController.salesDiscount.clear();
+                                    customerController.billwise.value = false;
+                                    customerController.isactive.value = false;
+                                    customerController.taxNoController.clear();
                                   } else {
                                     if (customerController
                                             .customerCode
@@ -2252,95 +2295,37 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                       );
 
                                       final List<AddressModel> addressModel =
-                                          customerController.label
+                                          customerController.address
+                                              .where((e) => e.customerId == 0)
+                                              .toList()
                                               .asMap()
                                               .map((index, value) {
-                                                return MapEntry(
-                                                  index,
-                                                  AddressModel(
-                                                    customerId: model.id ?? 0,
-                                                    label: value.text,
-                                                    buildingNumber:
-                                                        customerController
-                                                            .buildingNumber[index]
-                                                            .text,
-                                                    streetName:
-                                                        customerController
-                                                            .streetName[index]
-                                                            .text,
-                                                    streetNameArabic:
-                                                        customerController
-                                                            .streetNameArabic[index]
-                                                            .text,
-                                                    district:
-                                                        customerController
-                                                            .district[index]
-                                                            .text,
-                                                    districtArabic:
-                                                        customerController
-                                                            .districtArabic[index]
-                                                            .text,
-                                                    state:
-                                                        customerController
-                                                            .state[index]
-                                                            .text,
-                                                    stateArabic:
-                                                        customerController
-                                                            .stateArabic[index]
-                                                            .text,
-                                                    postalCode:
-                                                        customerController
-                                                            .postalCode[index]
-                                                            .text,
-                                                    country:
-                                                        customerController
-                                                            .selectedCountry
-                                                            .value,
-                                                  ),
-                                                );
+                                                return MapEntry(index, value);
                                               })
                                               .values
                                               .toList();
 
                                       final List<PhoneModel> phoneModel =
-                                          customerController.phoneno
+                                          customerController.phone
+                                              .where((p0) => p0.customerId == 0)
+                                              .toList()
                                               .asMap()
                                               .map((index, value) {
-                                                return MapEntry(
-                                                  index,
-                                                  PhoneModel(
-                                                    customerId: model.id ?? 0,
-                                                    type:
-                                                        customerController
-                                                            .phoneType[index]
-                                                            .text,
-                                                    phoneno:
-                                                        customerController
-                                                            .phoneno[index]
-                                                            .text,
-                                                  ),
-                                                );
+                                                return MapEntry(index, value);
                                               })
                                               .values
                                               .toList();
 
                                       final emailModel =
-                                          customerController.Email.asMap()
+                                          customerController.email
+                                              .where(
+                                                (element) =>
+                                                    element.customerId == 0,
+                                              )
+                                              .toList()
+                                              .asMap()
                                               .map((key, value) {
-                                                return MapEntry(
-                                                  key,
-                                                  EmailModel(
-                                                    customerId: model.id ?? 0,
-                                                    type:
-                                                        customerController
-                                                            .emailType[key]
-                                                            .text,
-                                                    Email:
-                                                        customerController
-                                                            .Email[key]
-                                                            .text,
-                                                  ),
-                                                );
+                                                return MapEntry(key, value);
                                               })
                                               .values
                                               .toList();
@@ -2381,39 +2366,23 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                               customerController
                                                   .taxTreatmentType
                                                   .value,
+                                          taxNumber:
+                                              customerController
+                                                  .taxNoController
+                                                  .text,
                                         ),
                                       ];
 
                                       final bankModel =
-                                          customerController.bankname
+                                          customerController.bank
+                                              .where(
+                                                (element) =>
+                                                    element.customerId == 0,
+                                              )
+                                              .toList()
                                               .asMap()
                                               .map((key, value) {
-                                                return MapEntry(
-                                                  key,
-                                                  BankModel(
-                                                    accountname:
-                                                        customerController
-                                                            .accountname[key]
-                                                            .text,
-                                                    accountno:
-                                                        customerController
-                                                            .accountno[key]
-                                                            .text,
-                                                    bankname:
-                                                        customerController
-                                                            .bankname[key]
-                                                            .text,
-                                                    customerId: model.id ?? 0,
-                                                    ifsccode:
-                                                        customerController
-                                                            .ifsccode[key]
-                                                            .text,
-                                                    label:
-                                                        customerController
-                                                            .bankLabel[key]
-                                                            .text,
-                                                  ),
-                                                );
+                                                return MapEntry(key, value);
                                               })
                                               .values
                                               .toList();
@@ -2440,6 +2409,15 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                           .clear();
                                       customerController.balance.clear();
                                       customerController.dateController.clear();
+
+                                      customerController.creditLimit.clear();
+                                      customerController.creditPeriod.clear();
+                                      customerController.idNo.clear();
+                                      customerController.salesDiscount.clear();
+                                      customerController.billwise.value = false;
+                                      customerController.isactive.value = false;
+                                      customerController.taxNoController
+                                          .clear();
                                     } else {
                                       customerController
                                               .customerCode
@@ -2448,7 +2426,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                           ? ScaffoldMessenger.of(
                                             context,
                                           ).showSnackBar(
-                                            SnackBar(
+                                            const SnackBar(
                                               content: Text(
                                                 'Please Enter Customer Code',
                                               ),
@@ -2457,7 +2435,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                           : ScaffoldMessenger.of(
                                             context,
                                           ).showSnackBar(
-                                            SnackBar(
+                                            const SnackBar(
                                               content: Text(
                                                 'Please Enter Ledger Name',
                                               ),
@@ -2467,7 +2445,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                   }
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   color: Colors.blue,
                                   child: Text(
                                     widget.edit ? 'Update' : 'Add',

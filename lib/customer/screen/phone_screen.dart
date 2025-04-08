@@ -1,7 +1,8 @@
 
 
-import 'package:customerdata_sqflite/customer/controller/customer_controller.dart';
+import 'package:customerdata_sqflite/customer/controller/customerController.dart';
 import 'package:customerdata_sqflite/customer/global/global.dart';
+import 'package:customerdata_sqflite/customer/model/phone_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,9 +11,10 @@ class PhoneContainer extends StatefulWidget {
 
   final int index;
   final VoidCallback onRemove;
+  final PhoneModel phoneModel;
 
   const PhoneContainer(
-      {super.key, required this.index, required this.onRemove});
+      {super.key, required this.index, required this.onRemove,required this.phoneModel});
 
   @override
   State<PhoneContainer> createState() => _PhoneContainerState();
@@ -29,8 +31,7 @@ class _PhoneContainerState extends State<PhoneContainer> {
     Size screenSize = MediaQuery.of(context).size;
     
         
-        return Obx(
-          () {
+       
             // var phonelist = customerController.phoneList[widget.index];
             return Container(
             decoration: BoxDecoration(
@@ -65,13 +66,13 @@ class _PhoneContainerState extends State<PhoneContainer> {
                             onEditingComplete: () {
                               FocusScope.of(context).requestFocus(phoneNumberFocus);
                             },
-                              controller: customerController.phoneType[widget.index],
+                              // controller: customerController.phoneType[widget.index],
                               cursorColor: Color(0xFFFFFFFF),
-                              // initialValue: phonelist.type,
+                               initialValue: widget.phoneModel.type,
                               onChanged: (value) {
-                                // phonelist.type = value;
-                                // customerController.updatePhone(
-                                //     widget.index, phonelist);
+                                 widget.phoneModel.type = value;
+                                customerController.updatePhone(
+                                    widget.phoneModel);
                               },
                               style: customiseStyle(
                                   const Color(0xFFFFFFFF), FontWeight.w500, 14.0),
@@ -87,13 +88,13 @@ class _PhoneContainerState extends State<PhoneContainer> {
                             // onEditingComplete: () {
                             //   FocusScope.of(context).requestFocus(ledgerNameFocus);
                             // },
-                              controller: customerController.phoneno[widget.index],
+                              // controller: customerController.phoneno[widget.index],
                               cursorColor: Color(0xFFFFFFFF),
-                              // initialValue: phonelist.phoneno,
-                              onChanged: (value) {
-                                // phonelist.phoneno = value;
-                                // customerController.updatePhone(
-                                //     widget.index, phonelist);
+                               initialValue: widget.phoneModel.phoneno,
+                             onChanged: (value) {
+                                 widget.phoneModel.phoneno = value;
+                                customerController.updatePhone(
+                                    widget.phoneModel);
                               },
                               style: customiseStyle(
                                   const Color(0xFFFFFFFF), FontWeight.w500, 14.0),
@@ -117,8 +118,6 @@ class _PhoneContainerState extends State<PhoneContainer> {
             ),
           );
         
-          }
-         );
     
   }
 }

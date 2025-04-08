@@ -1,6 +1,7 @@
 
-import 'package:customerdata_sqflite/customer/controller/customer_controller.dart';
+import 'package:customerdata_sqflite/customer/controller/customerController.dart';
 import 'package:customerdata_sqflite/customer/global/global.dart';
+import 'package:customerdata_sqflite/customer/model/bank_model.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,8 +11,9 @@ class BankContainer extends StatefulWidget {
  
   final int index;
   final VoidCallback onRemove;
+  final BankModel bankModel;
 
-  const BankContainer({super.key, required this.index, required this.onRemove});
+  const BankContainer({super.key, required this.index, required this.onRemove,required this.bankModel});
 
   @override
   State<BankContainer> createState() => _BankContainerState();
@@ -65,13 +67,13 @@ class _BankContainerState extends State<BankContainer> {
                             onEditingComplete: () {
                               FocusScope.of(context).requestFocus(bankNameFocus);
                             },
-                            controller: customerController.bankLabel[widget.index],
+                            // controller: customerController.bankLabel[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
-                            // initialValue: banklist.label,
+                            initialValue: widget.bankModel.label,
                             onChanged: (value) {
-                              // banklist.label = value;
-                              // customerController.updateBank(
-                              //     widget.index, banklist);
+                              widget.bankModel.label = value;
+                              customerController.updateBank(
+                                  widget.bankModel);
                             },
                             style: customiseStyle(
                                 const Color(0xFFFFFFFF), FontWeight.w500, 14.0),
@@ -87,13 +89,13 @@ class _BankContainerState extends State<BankContainer> {
                             onEditingComplete: () {
                               FocusScope.of(context).requestFocus(accountNameFocus);
                             },
-                            controller: customerController.bankname[widget.index],
+                            // controller: customerController.bankname[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
-                            // initialValue: banklist.bankname,
+                            initialValue: widget.bankModel.bankname,
                             onChanged: (value) {
-                              // banklist.bankname = value;
-                              // customerController.updateBank(
-                              //     widget.index, banklist);
+                              widget.bankModel.bankname = value;
+                              customerController.updateBank(
+                                  widget.bankModel);
                             },
                             style: customiseStyle(
                                 const Color(0xFFFFFFFF), FontWeight.w500, 14.0),
@@ -118,13 +120,13 @@ class _BankContainerState extends State<BankContainer> {
                             onEditingComplete: () {
                               FocusScope.of(context).requestFocus(accountNumberFocus);
                             },
-                            controller: customerController.accountname[widget.index],
+                            // controller: customerController.accountname[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
-                            // initialValue: banklist.accountname,
+                            initialValue: widget.bankModel.accountname,
                             onChanged: (value) {
-                              // banklist.accountname = value;
-                              // customerController.updateBank(
-                              //     widget.index, banklist);
+                              widget.bankModel.accountname = value;
+                               customerController.updateBank(
+                                  widget.bankModel);
                             },
                             style: customiseStyle(
                                 const Color(0xFFFFFFFF), FontWeight.w500, 14.0),
@@ -140,13 +142,13 @@ class _BankContainerState extends State<BankContainer> {
                             onEditingComplete: () {
                               FocusScope.of(context).requestFocus(ifscFocus);
                             },
-                            controller: customerController.accountno[widget.index],
+                            // controller: customerController.accountno[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
-                            // initialValue: banklist.accountno,
+                            initialValue: widget.bankModel.accountno,
                             onChanged: (value) {
-                              // banklist.accountno = value;
-                              // customerController.updateBank(
-                              //     widget.index, banklist);
+                              widget.bankModel.accountno = value;
+                              customerController.updateBank(
+                                  widget.bankModel);
                             },
                             style: customiseStyle(
                                 const Color(0xFFFFFFFF), FontWeight.w500, 14.0),
@@ -175,13 +177,13 @@ class _BankContainerState extends State<BankContainer> {
                           child: TextFormField(
                             focusNode: ifscFocus,
                          
-                            controller: customerController.ifsccode[widget.index],
+                            // controller: customerController.ifsccode[widget.index],
                             cursorColor: Color(0xFFFFFFFF),
-                            // initialValue: banklist.ifsccode,
+                            initialValue: widget.bankModel.ifsccode,
                             onChanged: (value) {
-                              // banklist.ifsccode = value;
-                              // customerController.updateBank(
-                              //     widget.index, banklist);
+                              widget.bankModel.ifsccode = value;
+                              customerController.updateBank(
+                                  widget.bankModel,);
                             },
                             style: customiseStyle(
                                 const Color(0xFFFFFFFF), FontWeight.w500, 14.0),

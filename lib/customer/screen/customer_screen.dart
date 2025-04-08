@@ -1,6 +1,6 @@
-import 'package:customerdata_sqflite/customer/controller/customer_controller.dart';
+import 'package:customerdata_sqflite/customer/controller/customerController.dart';
 import 'package:customerdata_sqflite/customer/global/global.dart';
-import 'package:customerdata_sqflite/customer/screen/add_customer.dart';
+import 'package:customerdata_sqflite/customer/screen/addCustomer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -56,13 +56,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
                               index,
                             ) {
                               final customerData = controller.customer[index];
-                              // final addressData = controller.address[index];
-                              // final phoneData = controller.phone[index];
-                              // final emailData = controller.email[index];
-                              // final bankData = controller.bank[index];
+                            
                           
-                              // print('nameeee${ controller.bank[index].accountname}');
-                              print('length :${controller.bank.length}');
                               return DataRow(
                                 cells: [
                                   DataCell(
@@ -104,7 +99,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                                           ),
                                                           InkWell(
                                                             onTap: () {
-                                                             controller.deleteCustomer(customerData.id!);
+                                                             controller.deleteCustomer(customerData);
                                                               Get.back();
                                                             },
                                                             child: Text('Ok'),

@@ -5,6 +5,7 @@ class TransactionModel {
 String? priceCategoryName;
 String? country;
 String? taxTreatment;
+String? taxNumber;
 String? creditPeriod;
 String? creditLimit;
 bool? billWiseApplicable;
@@ -19,6 +20,7 @@ TransactionModel({
   this.priceCategoryName,
   this.country,
   this.taxTreatment,
+  this.taxNumber,
   this.creditPeriod,
   this.creditLimit,
   this.billWiseApplicable,
@@ -35,6 +37,7 @@ Map<String,dynamic> toMap(){
     'priceCategoryName':priceCategoryName,
     'country':country,
     'taxTreatment':taxTreatment,
+    'taxNumber':taxNumber,
     'creditPeriod': creditPeriod,
     'creditLimit': creditLimit,
     'billWiseApplicable': billWiseApplicable,
@@ -52,6 +55,7 @@ factory TransactionModel.fromMap(Map<String,dynamic>json){
     priceCategoryName: json['priceCategoryName'],
      country: json['country'],
      taxTreatment: json['taxTreatment'],
+      taxNumber: json['taxNumber'],
      creditPeriod: json['creditPeriod'],
      creditLimit: json['creditLimit'],
      billWiseApplicable: json['billWiseApplicable']==1,
