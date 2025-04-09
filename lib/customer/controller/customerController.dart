@@ -22,9 +22,16 @@ class CustomerController extends GetxController {
     getEmailList();
     getTransactionList();
     getBankList();
-
+    paginatedData();
+    scrollController.addListener(_onScrollListner);
     super.onInit();
   }
+  
+   ScrollController scrollController = ScrollController();
+
+ RxBool isloading = false.obs;
+ RxInt limit = 9.obs;
+ RxInt offset = 0.obs;
 
   RxBool ismorecontact = false.obs;
   RxBool ismoretransaction = false.obs;
@@ -320,7 +327,14 @@ class CustomerController extends GetxController {
     }
     // });
 
-    getCustomerList();
+
+    List<CustomerModel> newData = await getCustomerList(
+      limit: limit.value,
+      offset: 0,
+    );
+
+    customer.value = newData;
+    // getCustomerList();
     getAddressList();
     getPhoneList();
     getEmailList();
@@ -329,10 +343,43 @@ class CustomerController extends GetxController {
   }
 
   //// fetching all customers data
-  Future<void> getCustomerList() async {
-    final data = await database.rawQuery('SELECT * FROM customer');
+  Future<List<CustomerModel>> getCustomerList({int limit = 0,int offset = 0}) async {
+    final data = await database.rawQuery('SELECT * FROM customer LIMIT ? OFFSET ?',
+    [limit,offset]
+    );
     print(data);
-    customer.value = data.map((e) => CustomerModel.fromMap(e)).toList();
+    
+    return data.map((e) => CustomerModel.fromMap(e)).toList();
+    
+  }
+
+
+
+  // Future<List<CountryModel>> getCountryList({
+  //   int limit = 0,
+  //   int offset = 0,
+  // }) async {
+  //   final data = await _database.rawQuery(
+  //     'SELECT * FROM country LIMIT ? OFFSET ?',
+  //     [limit, offset],
+  //   );
+  //   print(data);
+  //   return data.map((e) => CountryModel.fromMap(e)).toList();
+  // }
+
+
+   Future<void> paginatedData() async {
+    if (isloading.value) return;
+    isloading.value = true;
+
+    List<CustomerModel> newData = await getCustomerList(
+      limit: limit.value,
+      offset: 0,
+    );
+
+    customer.value = newData;
+
+    isloading.value = false;
   }
 
   //// fetching customer data by ID and transaction data
@@ -490,7 +537,7 @@ class CustomerController extends GetxController {
 
   //// editing all customer details including address,phone,email,transaction,bank
   Future<void> editCustomer(
-    CustomerModel customer,
+    CustomerModel customerData,
     List<AddressModel> addressModel,
     List<PhoneModel> phoneModel,
     List<EmailModel> emailModel,
@@ -501,38 +548,38 @@ class CustomerController extends GetxController {
     await database.rawUpdate(
       'UPDATE customer SET customerCode=?, ledgerName=?, registeredName=?, registeredNameArabic=?, balance=?, type=?, selectedDate=? WHERE id=?',
       [
-        customer.customerCode,
-        customer.ledgerName,
-        customer.registeredName,
-        customer.registeredNameArabic,
-        customer.balance,
-        customer.type,
-        customer.selectedDate,
-        customer.id,
+        customerData.customerCode,
+        customerData.ledgerName,
+        customerData.registeredName,
+        customerData.registeredNameArabic,
+        customerData.balance,
+        customerData.type,
+        customerData.selectedDate,
+        customerData.id,
       ],
     );
 
     await database.rawDelete('DELETE FROM address WHERE customerId=?', [
-      customer.id,
+      customerData.id,
     ]);
     await database.rawDelete('DELETE FROM phone WHERE customerId=?', [
-      customer.id,
+      customerData.id,
     ]);
     await database.rawDelete('DELETE FROM email WHERE customerId=?', [
-      customer.id,
+      customerData.id,
     ]);
     await database.rawDelete('DELETE FROM transactionData WHERE customerId=?', [
-      customer.id,
+      customerData.id,
     ]);
     await database.rawDelete('DELETE FROM bank WHERE customerId=?', [
-      customer.id,
+      customerData.id,
     ]);
 
     for (var address in addressModel) {
       await database.rawInsert(
         'INSERT INTO address(customerId, label, buildingNumber, streetName, streetNameArabic, district, districtArabic, state, stateArabic, postalCode, country) VALUES(?,?,?,?,?,?,?,?,?,?,?)',
         [
-          customer.id,
+          customerData.id,
           address.label,
           address.buildingNumber,
           address.streetName,
@@ -550,14 +597,14 @@ class CustomerController extends GetxController {
     for (var phone in phoneModel) {
       await database.rawInsert(
         'INSERT INTO phone(customerId, type, phoneno) VALUES(?,?,?)',
-        [customer.id, phone.type, phone.phoneno],
+        [customerData.id, phone.type, phone.phoneno],
       );
     }
 
     for (var email in emailModel) {
       await database.rawInsert(
         'INSERT INTO email(customerId, type, Email) VALUES(?,?,?)',
-        [customer.id, email.type, email.Email],
+        [customerData.id, email.type, email.Email],
       );
     }
 
@@ -565,7 +612,7 @@ class CustomerController extends GetxController {
       await database.rawInsert(
         'INSERT INTO transactionData(customerId, priceCategoryName, country, taxTreatment, taxNumber, creditPeriod, creditLimit, billWiseApplicable, isActive, partyIdentificationCode, idNo, salesDiscount) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
         [
-          customer.id,
+          customerData.id,
           transaction.priceCategoryName,
           transaction.country,
           transaction.taxTreatment,
@@ -585,7 +632,7 @@ class CustomerController extends GetxController {
       await database.rawInsert(
         'INSERT INTO bank(customerId, label, bankname, accountname, accountno, ifsccode) VALUES(?,?,?,?,?,?)',
         [
-          customer.id,
+          customerData.id,
           bank.label,
           bank.bankname,
           bank.accountname,
@@ -596,7 +643,14 @@ class CustomerController extends GetxController {
     }
     // });
 
-    getCustomerList();
+
+     List<CustomerModel> newData = await getCustomerList(
+      limit: limit.value,
+      offset: 0,
+    );
+
+    customer.value = newData;
+    // getCustomerList();
     getAddressList();
     getPhoneList();
     getEmailList();
@@ -612,9 +666,9 @@ class CustomerController extends GetxController {
   // }
 
   //// delete a customer
-  Future<void> deleteCustomer(CustomerModel customer) async {
+  Future<void> deleteCustomer(CustomerModel customerData) async {
     await database.transaction((txn) async {
-      final customerId = customer.id;
+      final customerId = customerData.id;
 
       await txn.rawDelete('DELETE FROM address WHERE customerId = ?', [
         customerId,
@@ -633,12 +687,41 @@ class CustomerController extends GetxController {
       ]);
       await txn.rawDelete('DELETE FROM customer WHERE id = ?', [customerId]);
     });
+   
+     List<CustomerModel> newData = await getCustomerList(
+      limit: limit.value,
+      offset: 0,
+    );
 
-    getCustomerList();
+    customer.value = newData;
+    // getCustomerList();
     getAddressList();
     getPhoneList();
     getEmailList();
     getTransactionList();
     getBankList();
   }
+
+void _onScrollListner(){
+if(scrollController.position.atEdge){
+  if(scrollController.position.pixels !=0){
+    isloading.value = true;
+    offset.value ++;
+    getPaginatedData(offsetValue: offset.value, limit: limit.value).then((value) {
+      customer.addAll(value);
+      isloading.value = false;
+    },);
+  }
+}
+}
+
+Future<List<CustomerModel>> getPaginatedData({required int offsetValue,required int limit})async{
+int offset = limit*offsetValue;
+
+final data = await database.rawQuery( 'SELECT * FROM customer ORDER BY id ASC LIMIT ? OFFSET ?',
+      [limit, offset],);
+
+      return data.map((e) => CustomerModel.fromMap(e)).toList();
+}
+
 }

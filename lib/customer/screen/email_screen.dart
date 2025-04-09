@@ -5,7 +5,6 @@ import 'package:customerdata_sqflite/customer/global/global.dart';
 import 'package:customerdata_sqflite/customer/model/email_model.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class EmailContainer extends StatefulWidget {
@@ -32,6 +31,7 @@ class _EmailContainerState extends State<EmailContainer> {
    
         // var emaillist = customerController.emailList[widget.index];
         return Container(
+          padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.all(Radius.circular(5))),
@@ -39,20 +39,7 @@ class _EmailContainerState extends State<EmailContainer> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          // customerController.printemailList();
-                        },
-                        icon: Icon(Icons.add)),
-                    IconButton(
-                      onPressed: widget.onRemove,
-                      icon: Icon(Icons.close, color: Colors.red),
-                    ),
-                  ],
-                ),
+                
                 Column(
                   children: [
                     Row(
@@ -79,7 +66,7 @@ class _EmailContainerState extends State<EmailContainer> {
                             ),
                           ),
                         ),
-                        SizedBox(width: screenSize.width * 0.02),
+                        SizedBox(width: screenSize.width * 0.04),
                         Expanded(
                           child: TextFormField(
                               focusNode: emailAddressFocus,
@@ -106,6 +93,11 @@ class _EmailContainerState extends State<EmailContainer> {
                             ),
                           ),
                         ),
+                       SizedBox(width: screenSize.width * 0.01),
+                        IconButton(
+                      onPressed: widget.onRemove,
+                      icon: Icon(Icons.close, color: Colors.red),
+                    ),
                       ],
                     )
                   ],

@@ -37,9 +37,9 @@ class _AddressContainerState extends State<AddressContainer> {
   @override
   void initState() {
     if (widget.addressModel.country.isNotEmpty) {
-    customerController.selectedCountry.value = widget.addressModel.country;
-  }
-    // TODO: implement initState
+      customerController.selectedCountry.value = widget.addressModel.country;
+    }
+
     super.initState();
   }
 
@@ -49,6 +49,7 @@ class _AddressContainerState extends State<AddressContainer> {
 
     // var addresslist = customerController.address[widget.index];
     return Container(
+      padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -58,9 +59,8 @@ class _AddressContainerState extends State<AddressContainer> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                IconButton(onPressed: () async {}, icon: Icon(Icons.add)),
                 IconButton(
                   onPressed: widget.onRemove,
                   icon: Icon(Icons.close, color: Colors.red),
@@ -76,8 +76,9 @@ class _AddressContainerState extends State<AddressContainer> {
                       child: TextFormField(
                         focusNode: labelFocus,
                         onEditingComplete: () {
-                          FocusScope.of(context)
-                              .requestFocus(buildingNumberFocus);
+                          FocusScope.of(
+                            context,
+                          ).requestFocus(buildingNumberFocus);
                         },
                         // controller: customerController.label[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
@@ -105,11 +106,10 @@ class _AddressContainerState extends State<AddressContainer> {
                         //     customerController.buildingNumber[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
                         initialValue: widget.addressModel.buildingNumber,
-                      
-                          onChanged: (value) {
+
+                        onChanged: (value) {
                           widget.addressModel.buildingNumber = value;
                           customerController.updateAddress(widget.addressModel);
-                      
                         },
                         style: customiseStyle(
                           const Color(0xFFFFFFFF),
@@ -144,8 +144,9 @@ class _AddressContainerState extends State<AddressContainer> {
                       child: TextFormField(
                         focusNode: streetNameFocus,
                         onEditingComplete: () {
-                          FocusScope.of(context)
-                              .requestFocus(streetNameArabicFocus);
+                          FocusScope.of(
+                            context,
+                          ).requestFocus(streetNameArabicFocus);
                         },
                         // controller: customerController.streetName[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
@@ -167,14 +168,15 @@ class _AddressContainerState extends State<AddressContainer> {
                       child: TextFormField(
                         focusNode: streetNameArabicFocus,
                         onEditingComplete: () {
-                          FocusScope.of(context)
-                              .requestFocus(districtNameFocus);
+                          FocusScope.of(
+                            context,
+                          ).requestFocus(districtNameFocus);
                         },
                         // controller:
                         //     customerController.streetNameArabic[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
-                       initialValue: widget.addressModel.streetNameArabic,
-                      onChanged: (value) {
+                        initialValue: widget.addressModel.streetNameArabic,
+                        onChanged: (value) {
                           widget.addressModel.streetNameArabic = value;
                           customerController.updateAddress(widget.addressModel);
                         },
@@ -202,12 +204,13 @@ class _AddressContainerState extends State<AddressContainer> {
                       child: TextFormField(
                         focusNode: districtNameFocus,
                         onEditingComplete: () {
-                          FocusScope.of(context)
-                              .requestFocus(districtNameArabicFocus);
+                          FocusScope.of(
+                            context,
+                          ).requestFocus(districtNameArabicFocus);
                         },
                         // controller: customerController.district[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
-                       initialValue: widget.addressModel.district,
+                        initialValue: widget.addressModel.district,
                         onChanged: (value) {
                           widget.addressModel.district = value;
                           customerController.updateAddress(widget.addressModel);
@@ -232,8 +235,8 @@ class _AddressContainerState extends State<AddressContainer> {
                         // controller:
                         //     customerController.districtArabic[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
-                       initialValue: widget.addressModel.districtArabic,
-                         onChanged: (value) {
+                        initialValue: widget.addressModel.districtArabic,
+                        onChanged: (value) {
                           widget.addressModel.districtArabic = value;
                           customerController.updateAddress(widget.addressModel);
                         },
@@ -261,8 +264,9 @@ class _AddressContainerState extends State<AddressContainer> {
                       child: TextFormField(
                         focusNode: stateNameFocus,
                         onEditingComplete: () {
-                          FocusScope.of(context)
-                              .requestFocus(stateNameArabicFocus);
+                          FocusScope.of(
+                            context,
+                          ).requestFocus(stateNameArabicFocus);
                         },
                         // controller: customerController.state[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
@@ -292,7 +296,7 @@ class _AddressContainerState extends State<AddressContainer> {
                         // customerController.stateArabic[widget.index],
                         cursorColor: Color(0xFFFFFFFF),
                         initialValue: widget.addressModel.stateArabic,
-                       onChanged: (value) {
+                        onChanged: (value) {
                           widget.addressModel.stateArabic = value;
                           customerController.updateAddress(widget.addressModel);
                         },
@@ -333,7 +337,7 @@ class _AddressContainerState extends State<AddressContainer> {
                           ),
                         ],
                         initialValue: widget.addressModel.postalCode,
-                      onChanged: (value) {
+                        onChanged: (value) {
                           widget.addressModel.postalCode = value;
                           customerController.updateAddress(widget.addressModel);
                         },
@@ -347,55 +351,59 @@ class _AddressContainerState extends State<AddressContainer> {
                     ),
                     SizedBox(width: screenSize.width * 0.02),
                     Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Color(0xFFFFFFFF)),
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: Color(0xFFFFFFFF)),
+                          ),
                         ),
-                        value: widget.addressModel.country.isEmpty
-                            ? null
-                            : widget.addressModel.country,
-                        dropdownColor: Color(0xFF004775),
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color(0xFFFFFFFF),
-                        ),
-                        items: customerController.countryname.map((country) {
-                          return DropdownMenuItem<String>(
-                            value: country,
-                            child: Text(
-                              country,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0,
-                              ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.0,
                             ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() {
-                              widget.addressModel.country = value;
-                              customerController
-                                  .updateAddress(widget.addressModel);
-                            });
-                          }
-                        },
+                            value:
+                                widget.addressModel.country.isEmpty
+                                    ? null
+                                    : widget.addressModel.country,
+                            dropdownColor: Color(0xFF004775),
+                            icon: Icon(
+                              Icons.arrow_drop_down,
+                              color: Color(0xFFFFFFFF),
+                            ),
+                            items:
+                                customerController.countryname.map((country) {
+                                  return DropdownMenuItem<String>(
+                                    value: country,
+                                    child: Text(
+                                      country,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  widget.addressModel.country = value;
+                                  customerController.updateAddress(
+                                    widget.addressModel,
+                                  );
+                                });
+                              }
+                            },
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),],
+                  ],
                 ),
               ],
             ),

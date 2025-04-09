@@ -18,111 +18,192 @@ class _CustomerScreenState extends State<CustomerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xff000000),
         centerTitle: true,
         title: InkWell(
           onTap: () {
-            Get.to(() => CreateCustomerScreen(edit: false,customerId: 0,));
+            Get.to(() => CreateCustomerScreen(edit: false, customerId: 0));
           },
-          child: Text(
-            'Add',
-            style: customiseStyle(Colors.black, FontWeight.bold, 14.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add, color: Colors.white),
+              Text(
+                'Add Customer',
+                style: customiseStyle(Colors.white, FontWeight.bold, 14.0),
+              ),
+            ],
           ),
         ),
       ),
       body: Container(
         padding: EdgeInsets.all(7),
-        child: Column(
-          children: [
-            Obx(() {
-              return controller.customer.isEmpty
-                  ? Center(child: Text('No Customer Found!'))
-                  : Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Column(
-                        children: [
-                          DataTable(
-                            columns: [
-                              DataColumn(label: Text('Customer Code')),
-                              DataColumn(label: Text('Ledger Name')),
-                           
-                              DataColumn(label: Text('View')),
-                              DataColumn(label: Text('Delete')),
-                            ],
-                            rows: List.generate(controller.customer.length, (
-                              index,
-                            ) {
-                              final customerData = controller.customer[index];
-                            
-                          
-                              return DataRow(
-                                cells: [
-                                  DataCell(
-                                    Text(customerData.customerCode.toString()),
-                                  ),
-                                  DataCell(
-                                    Text(customerData.ledgerName.toString()),
-                                  ),
-                                 
-                                  DataCell(InkWell(
-                                    onTap: () {
-                                      Get.to(()=> CreateCustomerScreen(
-                                      edit: true,
-                                      customerId: customerData.id!,
-                                   
-                                      ));
-                                    },
-                                    child: Icon(Icons.edit, color: Colors.blue))),
-                                  DataCell(InkWell(
-                                    
-                                    onTap: () {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    title: Text('Delete!'),
-                                                    content: Text(
-                                                      'Do you want to delete?',
-                                                    ),
-                                                    actions: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                        children: [
-                                                          InkWell(
-                                                            onTap: () => Get.back(),
-                                                            child: Text('Cancel'),
-                                                          ),
-                                                          InkWell(
-                                                            onTap: () {
-                                                             controller.deleteCustomer(customerData);
-                                                              Get.back();
-                                                            },
-                                                            child: Text('Ok'),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Obx(() {
+                if (controller.isloading.value && controller.customer.isEmpty) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (controller.customer.isEmpty) {
+                  return Center(child: Text('No Customer Found!'));
+                }
+                return Container(
+                  height: MediaQuery.of(context).size.height * 0.85,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: Colors.black),
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 8,
+                        ),
+                        child: Row(
+                          children: const [
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                "Customer Code",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                "Ledger Name",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                "Edit",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                "Delete",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: CustomScrollView(
+                          controller: controller.scrollController,
+                          slivers: [
+                            SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                childCount: controller.customer.length,
+                                (context, index) {
+                                  final customer = controller.customer[index];
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10,
+                                      horizontal: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 2,
+                                          child: Text(
+                                            customer.customerCode.toString(),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            customer.ledgerName.toString(),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.edit,
+                                              color: Colors.blue,
+                                            ),
+                                            onPressed: () {
+                                              Get.to(
+                                                () => CreateCustomerScreen(
+                                                  edit: true,
+                                                  customerId: customer.id!,
+                                                ),
                                               );
                                             },
-                                            
-                                    child: Icon(Icons.delete, color: Colors.red))),
-                                ],
-                              );
-                            }),
-                          ),
-                        ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (_) => AlertDialog(
+                                                      title: Text("Delete!"),
+                                                      content: Text(
+                                                        "Do you want to delete?",
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed:
+                                                              () => Get.back(),
+                                                          child: Text("Cancel"),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            controller
+                                                                .deleteCustomer(
+                                                                  customer,
+                                                                );
+                                                               
+                                                            Get.back();
+                                                          },
+                                                          child: Text("Ok"),
+                                                        ),
+                                                      ],
+                                                    ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-            }),
-          ],
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );

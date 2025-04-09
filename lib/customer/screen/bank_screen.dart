@@ -35,6 +35,7 @@ class _BankContainerState extends State<BankContainer> {
    
         // var banklist = customerController.bankList[widget.index];
         return Container(
+          padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.all(Radius.circular(5))),
@@ -42,20 +43,7 @@ class _BankContainerState extends State<BankContainer> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          // customerController.printBankList();
-                        },
-                        icon: Icon(Icons.add)),
-                    IconButton(
-                      onPressed: widget.onRemove,
-                      icon: Icon(Icons.close, color: Colors.red),
-                    ),
-                  ],
-                ),
+                
                 Column(
                   children: [
                     Row(
@@ -193,6 +181,10 @@ class _BankContainerState extends State<BankContainer> {
                           ),
                         ),
                         SizedBox(width: screenSize.width * 0.02),
+                        IconButton(
+                      onPressed: widget.onRemove,
+                      icon: Icon(Icons.close, color: Colors.red),
+                    ),
                       ],
                     ),
                   ],
