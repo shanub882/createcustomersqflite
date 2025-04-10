@@ -24,14 +24,15 @@ class CustomerController extends GetxController {
     getBankList();
     paginatedData();
     scrollController.addListener(_onScrollListner);
+    loadAllCustomers();
     super.onInit();
   }
-  
-   ScrollController scrollController = ScrollController();
 
- RxBool isloading = false.obs;
- RxInt limit = 9.obs;
- RxInt offset = 0.obs;
+  ScrollController scrollController = ScrollController();
+
+  RxBool isloading = false.obs;
+  RxInt limit = 9.obs;
+  RxInt offset = 0.obs;
 
   RxBool ismorecontact = false.obs;
   RxBool ismoretransaction = false.obs;
@@ -187,7 +188,7 @@ class CustomerController extends GetxController {
   var selectedCountry = "India".obs;
   var selectedCountryName = "India".obs;
   final RxString selectedTaxTreatmentText = '1'.obs;
-  var taxId = "".obs;
+  var taxId = "1".obs;
   var taxTreatmentType = '1'.obs;
   void updateTaxTreatment(String value) {
     selectedTaxTreatmentText.value = value;
@@ -327,14 +328,14 @@ class CustomerController extends GetxController {
     }
     // });
 
-
     List<CustomerModel> newData = await getCustomerList(
       limit: limit.value,
       offset: 0,
     );
 
     customer.value = newData;
-    // getCustomerList();
+    offset.value = 0;
+    loadAllCustomers();
     getAddressList();
     getPhoneList();
     getEmailList();
@@ -342,19 +343,47 @@ class CustomerController extends GetxController {
     getBankList();
   }
 
-  //// fetching all customers data
-  Future<List<CustomerModel>> getCustomerList({int limit = 0,int offset = 0}) async {
-    final data = await database.rawQuery('SELECT * FROM customer LIMIT ? OFFSET ?',
-    [limit,offset]
+
+RxList<CustomerModel> allCustomers = <CustomerModel>[].obs;
+
+Future<void> loadAllCustomers()async{
+allCustomers.value = await getAllCustomers();
+}
+
+  Future<List<CustomerModel>> getAllCustomers() async {
+  final data = await database.rawQuery('SELECT * FROM customer');
+  return data.map((e) => CustomerModel.fromMap(e)).toList();
+}
+
+
+  //// fetching all customers data by limit 
+  Future<List<CustomerModel>> getCustomerList({
+    int limit = 0,
+    int offset = 0,
+  }) async {
+    final data = await database.rawQuery(
+      'SELECT * FROM customer LIMIT ? OFFSET ?',
+      [limit, offset],
     );
     print(data);
-    
+
     return data.map((e) => CustomerModel.fromMap(e)).toList();
-    
   }
 
+  Future<int> getTotalCustomerCount() async {
+    final result = await database.rawQuery(
+      'SELECT customerCode FROM customer ORDER BY id DESC LIMIT 1',
+    );
+    if (result.isNotEmpty) {
+      final lastCode =
+          int.tryParse(result.first['customerCode'].toString()) ?? 0;
+      return lastCode + 1;
+    } else {
+      return 1;
+    }
+  }
 
-
+   
   // Future<List<CountryModel>> getCountryList({
   //   int limit = 0,
   //   int offset = 0,
@@ -367,8 +396,7 @@ class CustomerController extends GetxController {
   //   return data.map((e) => CountryModel.fromMap(e)).toList();
   // }
 
-
-   Future<void> paginatedData() async {
+  Future<void> paginatedData() async {
     if (isloading.value) return;
     isloading.value = true;
 
@@ -643,14 +671,14 @@ class CustomerController extends GetxController {
     }
     // });
 
-
-     List<CustomerModel> newData = await getCustomerList(
+    List<CustomerModel> newData = await getCustomerList(
       limit: limit.value,
       offset: 0,
     );
 
     customer.value = newData;
-    // getCustomerList();
+    offset.value = 0;
+   loadAllCustomers();
     getAddressList();
     getPhoneList();
     getEmailList();
@@ -687,14 +715,16 @@ class CustomerController extends GetxController {
       ]);
       await txn.rawDelete('DELETE FROM customer WHERE id = ?', [customerId]);
     });
-   
-     List<CustomerModel> newData = await getCustomerList(
+
+    List<CustomerModel> newData = await getCustomerList(
       limit: limit.value,
       offset: 0,
     );
 
     customer.value = newData;
-    // getCustomerList();
+
+    offset.value = 0;
+   loadAllCustomers();
     getAddressList();
     getPhoneList();
     getEmailList();
@@ -702,26 +732,32 @@ class CustomerController extends GetxController {
     getBankList();
   }
 
-void _onScrollListner(){
-if(scrollController.position.atEdge){
-  if(scrollController.position.pixels !=0){
-    isloading.value = true;
-    offset.value ++;
-    getPaginatedData(offsetValue: offset.value, limit: limit.value).then((value) {
-      customer.addAll(value);
-      isloading.value = false;
-    },);
+  void _onScrollListner() {
+    if (scrollController.position.atEdge) {
+      if (scrollController.position.pixels != 0) {
+        isloading.value = true;
+        offset.value++;
+        getPaginatedData(offsetValue: offset.value, limit: limit.value).then((
+          value,
+        ) {
+          customer.addAll(value);
+          isloading.value = false;
+        });
+      }
+    }
   }
-}
-}
 
-Future<List<CustomerModel>> getPaginatedData({required int offsetValue,required int limit})async{
-int offset = limit*offsetValue;
+  Future<List<CustomerModel>> getPaginatedData({
+    required int offsetValue,
+    required int limit,
+  }) async {
+    int offset = limit * offsetValue;
 
-final data = await database.rawQuery( 'SELECT * FROM customer ORDER BY id ASC LIMIT ? OFFSET ?',
-      [limit, offset],);
+    final data = await database.rawQuery(
+      'SELECT * FROM customer ORDER BY id ASC LIMIT ? OFFSET ?',
+      [limit, offset],
+    );
 
-      return data.map((e) => CustomerModel.fromMap(e)).toList();
-}
-
+    return data.map((e) => CustomerModel.fromMap(e)).toList();
+  }
 }

@@ -34,11 +34,59 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
   final formKey = GlobalKey<FormState>();
   @override
   void initState() {
-    // customerController.bank.length==0?customerController.addBank(customerId: widget.edit?widget.customerId:0):SizedBox();
+    final address = customerController.address;
+
+    final hasAddress =
+        widget.edit
+            ? address.any((element) => element.customerId == widget.customerId)
+            : address.any((element) => element.customerId == 0);
+    if (!hasAddress) {
+      customerController.addAddress(
+        customerId: widget.edit ? widget.customerId : 0,
+      );
+    }
+
+    final phone = customerController.phone;
+
+    final hasPhone =
+        widget.edit
+            ? phone.any((element) => element.customerId == widget.customerId)
+            : phone.any((element) => element.customerId == 0);
+    if (!hasPhone) {
+      customerController.addPhone(
+        customerId: widget.edit ? widget.customerId : 0,
+      );
+    }
+
+    final email = customerController.email;
+
+    final hasEmail =
+        widget.edit
+            ? email.any((element) => element.customerId == widget.customerId)
+            : email.any((element) => element.customerId == 0);
+    if (!hasEmail) {
+      customerController.addemail(
+        customerId: widget.edit ? widget.customerId : 0,
+      );
+    }
+
+    final banks = customerController.bank;
+
+    final hasBanks =
+        widget.edit
+            ? banks.any((bank) => bank.customerId == widget.customerId)
+            : banks.any((bank) => bank.customerId == 0);
+
+    if (!hasBanks) {
+      customerController.addBank(
+        customerId: widget.edit ? widget.customerId : 0,
+      );
+    }
+
     if (widget.edit) {
       customerController.getCustomerData(widget.customerId);
     } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         customerController.customerCode.clear();
         customerController.ledgernameController.clear();
         customerController.registerednameController.clear();
@@ -49,7 +97,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
         customerController.dateController.text = DateFormat(
           'dd/MM/yyyy',
         ).format(DateTime.now());
-      
+
         customerController.balance.text = 0.toString();
 
         customerController.creditLimit.clear();
@@ -63,6 +111,11 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
         customerController.ismorecontact.value = false;
         customerController.ismoretransaction.value = false;
         customerController.ismorebank.value = false;
+
+        final lastCustomer = await customerController.getTotalCustomerCount();
+        print('length${customerController.customer.length}');
+        print('last customer$lastCustomer');
+        customerController.customerCode.text = lastCustomer.toString();
       });
     }
 
@@ -80,6 +133,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
   final FocusNode creditLimitFocus = FocusNode();
   final FocusNode idNoFocus = FocusNode();
   final FocusNode salesDiscountFocus = FocusNode();
+  final FocusNode taxNumberFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +205,17 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
             if (value!.isEmpty) {
               return 'Please Enter Customer Code';
             }
+            bool checkDuplicate = customerController.allCustomers.any((
+              element,
+            ) {
+              // print('elell${element.customerCode}');
+              return element.customerCode == value &&
+                  element.id != widget.customerId;
+            });
+            if (checkDuplicate) {
+              return 'This customer code is already registered';
+            }
+
             return null;
           },
           focusNode: customercodeFocus,
@@ -175,6 +240,18 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
             if (value!.isEmpty) {
               return 'Please Enter Ledger Name';
             }
+
+            bool checkDuplicate = customerController.allCustomers.any((
+              element,
+            ) {
+              // print('elell${element.ledgerName}');
+              return element.ledgerName == value &&
+                  element.id != widget.customerId;
+            });
+            if (checkDuplicate) {
+              return 'This Ledger Name is already registered';
+            }
+
             return null;
           },
           focusNode: ledgerNameFocus,
@@ -294,25 +371,42 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
 
         SizedBox(height: screenSize.height * 0.02),
         GestureDetector(
-          
           onTap: () async {
-            DateTime? pickedDate = await showDatePicker(
-              confirmText: '',
+            showDialog(
               context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2100),
+              builder: (context) {
+                return AlertDialog(
+                  content: CalendarDatePicker(
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    onDateChanged: (value) {
+                      customerController.dateController.text = DateFormat(
+                        'dd/MM/yyyy',
+                      ).format(value);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                );
+              },
             );
 
-            if (pickedDate != null) {
-              customerController.dateController.text = DateFormat(
-                'dd/MM/yyyy',
-              ).format(pickedDate);
-              // "${pickedDate.toLocal()}".split(' ')[0];
-            }
+            // DateTime? pickedDate = await showDatePicker(
+            //   confirmText: '',
+            //   context: context,
+            //   initialDate: DateTime.now(),
+            //   firstDate: DateTime(2000),
+            //   lastDate: DateTime(2100),
+            // );
+
+            // if (pickedDate != null) {
+            //   customerController.dateController.text = DateFormat(
+            //     'dd/MM/yyyy',
+            //   ).format(pickedDate);
+            //   // "${pickedDate.toLocal()}".split(' ')[0];
+            // }
           },
           child: AbsorbPointer(
-          
             child: TextFormField(
               readOnly: true,
               controller: customerController.dateController,
@@ -375,11 +469,11 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
         SizedBox(height: screenSize.height * 0.01),
         Obx(
           () =>
-              customerController.ismorecontact.value ||
-                      widget.edit == true &&
-                          customerController.address.isNotEmpty ||
-                      customerController.phone.isNotEmpty ||
-                      customerController.email.isNotEmpty
+              customerController.ismorecontact.value
+                  // widget.edit == true &&
+                  //     customerController.address.isNotEmpty ||
+                  // customerController.phone.isNotEmpty ||
+                  // customerController.email.isNotEmpty
                   ? Column(
                     children: [
                       Column(
@@ -675,7 +769,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
         Obx(
           //! Transaction
           () =>
-              customerController.ismoretransaction.value || widget.edit == true
+              customerController.ismoretransaction.value
                   ? Column(
                     children: [
                       Container(
@@ -1151,13 +1245,13 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                             ),
                                             TextFormField(
                                               focusNode: idNoFocus,
-                                              onEditingComplete: () {
-                                                FocusScope.of(
-                                                  context,
-                                                ).requestFocus(
-                                                  salesDiscountFocus,
-                                                );
-                                              },
+                                              // onEditingComplete: () {
+                                              //   FocusScope.of(
+                                              //     context,
+                                              //   ).requestFocus(
+                                              //     taxNumberFocus,
+                                              //   );
+                                              // },
                                               controller:
                                                   customerController.idNo,
                                               cursorColor: const Color(
@@ -1316,6 +1410,14 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                               customerController.taxId.value !=
                                                       "1"
                                                   ? TextFormField(
+                                                    focusNode: taxNumberFocus,
+                                                    onEditingComplete: () {
+                                                      FocusScope.of(
+                                                        context,
+                                                      ).requestFocus(
+                                                        salesDiscountFocus,
+                                                      );
+                                                    },
                                                     cursorColor: const Color(
                                                       0xFFFFFFFF,
                                                     ),
@@ -1353,7 +1455,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                             .taxNoController
                                                             .text
                                                             .isEmpty) {
-                                                          return 'Please select a tax treatment first'
+                                                          return 'Please select a tax\n treatment first'
                                                               .tr;
                                                         }
                                                         if (value == null ||
@@ -1365,13 +1467,13 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                         }
                                                         if (value.length !=
                                                             15) {
-                                                          return 'Tax No must be exactly 15 digits'
+                                                          return 'Tax No must be exactly\n15 digits'
                                                               .tr;
                                                         }
                                                         if (!RegExp(
                                                           r'^3\d{13}3$',
                                                         ).hasMatch(value)) {
-                                                          return 'Tax No must start and end with 3 and contain only digits'
+                                                          return 'Tax No must start and\nend with 3 and\ncontain only digits'
                                                               .tr;
                                                         }
                                                       }
@@ -1533,8 +1635,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
         SizedBox(height: screenSize.height * 0.01),
         Obx(
           () =>
-              customerController.ismorebank.value ||
-                      widget.edit == true && customerController.bank.isNotEmpty
+              customerController.ismorebank.value
                   ? Column(
                     children: [
                       Column(
