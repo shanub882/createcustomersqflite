@@ -1,4 +1,6 @@
 import 'package:customerdata_sqflite/customer/controller/customerController.dart';
+import 'package:customerdata_sqflite/customer/controller/googleMapsController.dart';
+
 import 'package:customerdata_sqflite/customer/global/global.dart';
 import 'package:customerdata_sqflite/customer/model/address_model.dart';
 import 'package:customerdata_sqflite/customer/model/customer_model.dart';
@@ -7,7 +9,9 @@ import 'package:customerdata_sqflite/customer/model/transaction_model.dart';
 import 'package:customerdata_sqflite/customer/screen/addressScreen.dart';
 import 'package:customerdata_sqflite/customer/screen/bank_screen.dart';
 import 'package:customerdata_sqflite/customer/screen/email_screen.dart';
+
 import 'package:customerdata_sqflite/customer/screen/phone_screen.dart';
+import 'package:customerdata_sqflite/customer/screen/pick_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -28,7 +32,7 @@ class CreateCustomerScreen extends StatefulWidget {
 }
 
 class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
-  // CustomerController customerController = Get.put(CustomerController());
+  MapController mapController = Get.put(MapController());
   final CustomerController customerController = Get.find<CustomerController>();
 
   final formKey = GlobalKey<FormState>();
@@ -82,6 +86,9 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
         customerId: widget.edit ? widget.customerId : 0,
       );
     }
+
+    customerController.selectedTaxTreatmentText.value = '1';
+    customerController.taxId.value = "1";
 
     if (widget.edit) {
       customerController.getCustomerData(widget.customerId);
@@ -237,9 +244,12 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
         SizedBox(height: screenSize.height * 0.02),
         TextFormField(
           validator: (value) {
-            if (value!.isEmpty) {
+            if (value == null || value.trim().isEmpty) {
               return 'Please Enter Ledger Name';
             }
+            //         if (!RegExp(r'^[a-zA-Z][a-zA-Z\s]*$').hasMatch(value.trim())) {
+            //   return 'Name must start with a letter and only contain letters and spaces';
+            // }
 
             bool checkDuplicate = customerController.allCustomers.any((
               element,
@@ -290,6 +300,52 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
           decoration: newDesignTextfield(hintText: 'Registered Name (Arabic)'),
         ),
         SizedBox(height: screenSize.height * 0.02),
+        Obx(
+          () {
+            final latLng = mapController.selectedLocation.value;
+             
+            return Row(
+            children: [
+              Expanded(
+                child: Text(latLng != null ?
+                  "Latitude: ${latLng.latitude}":'Latitude',
+                  style: customiseStyle(
+                    const Color(0xFFFFFFFF),
+                    FontWeight.w500,
+                    11.0,
+                  ),
+                ),
+              ),
+              SizedBox(width: screenSize.width * 0.05),
+              Expanded(
+                child: Text(
+                  latLng !=null ?
+                  "Longitude: ${latLng.longitude}":'Longitude',
+                  style: customiseStyle(
+                    const Color(0xFFFFFFFF),
+                    FontWeight.w500,
+                    11.0,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PickLocation()),
+                  );
+                },
+                child: const Icon(Icons.add_location, color: Colors.white),
+              ),
+            ],
+          );
+        
+          }
+         
+           ),
+
+        SizedBox(height: screenSize.height * 0.02),
+
         Row(
           children: [
             Expanded(
@@ -1374,12 +1430,12 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                             .updateTaxTreatment(
                                                               value,
                                                             );
-                                                        customerController
-                                                            .selectedTaxTreatmentText
-                                                            .value = value;
-                                                        customerController
-                                                            .taxId
-                                                            .value = value;
+                                                        // customerController
+                                                        //     .selectedTaxTreatmentText
+                                                        //     .value = value;
+                                                        // customerController
+                                                        //     .taxId
+                                                        //     .value = value;
                                                       }
                                                     },
                                                   );
@@ -1451,13 +1507,13 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
                                                               .taxId
                                                               .value ==
                                                           "0") {
-                                                        if (customerController
-                                                            .taxNoController
-                                                            .text
-                                                            .isEmpty) {
-                                                          return 'Please select a tax\n treatment first'
-                                                              .tr;
-                                                        }
+                                                        // if (customerController
+                                                        //     .taxNoController
+                                                        //     .text
+                                                        //     .isEmpty) {
+                                                        //   return 'Please select a tax\n treatment first'
+                                                        //       .tr;
+                                                        // }
                                                         if (value == null ||
                                                             value
                                                                 .trim()

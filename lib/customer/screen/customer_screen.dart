@@ -37,175 +37,155 @@ class _CustomerScreenState extends State<CustomerScreen> {
           ),
         ),
       ),
-      body: Container(
-        padding: EdgeInsets.all(7),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Obx(() {
-                if (controller.isloading.value && controller.customer.isEmpty) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (controller.customer.isEmpty) {
-                  return Center(child: Text('No Customer Found!'));
-                }
-                return Container(
-                  height: MediaQuery.of(context).size.height * 0.85,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(color: Colors.black),
+      body: Obx(() {
+        if (controller.isloading.value && controller.customer.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (controller.customer.isEmpty) {
+          return const Center(child: Text('No Customer Found!'));
+        }
+
+        return CustomScrollView(
+          controller: controller.scrollController,
+          slivers: [
+            SliverToBoxAdapter(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Colors.black)),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 8,
+                      ),
+                      child: Row(
+                        children: const [
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              "Customer Code",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 8,
-                        ),
-                        child: Row(
-                          children: const [
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                "Customer Code",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Ledger Name",
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            Expanded(
-                              flex: 3,
-                              child: Text(
-                                "Ledger Name",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              "Edit",
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                "Edit",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              "Delete",
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                "Delete",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final customer = controller.customer[index];
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey.shade300),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(customer.customerCode.toString()),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Text(customer.ledgerName.toString()),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                          icon: const Icon(Icons.edit, color: Colors.blue),
+                          onPressed: () {
+                            Get.to(
+                              () => CreateCustomerScreen(
+                                edit: true,
+                                customerId: customer.id!,
                               ),
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ),
                       Expanded(
-                        child: CustomScrollView(
-                          controller: controller.scrollController,
-                          slivers: [
-                            SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                childCount: controller.customer.length,
-                                (context, index) {
-                                  final customer = controller.customer[index];
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 10,
-                                      horizontal: 8,
+                        flex: 1,
+                        child: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (_) => AlertDialog(
+                                    title: const Text("Delete!"),
+                                    content: const Text(
+                                      "Do you want to delete?",
                                     ),
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(
-                                          color: Colors.grey.shade300,
-                                        ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Get.back(),
+                                        child: const Text("Cancel"),
                                       ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: Text(
-                                            customer.customerCode.toString(),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
-                                          child: Text(
-                                            customer.ledgerName.toString(),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: IconButton(
-                                            icon: Icon(
-                                              Icons.edit,
-                                              color: Colors.blue,
-                                            ),
-                                            onPressed: () {
-                                              Get.to(
-                                                () => CreateCustomerScreen(
-                                                  edit: true,
-                                                  customerId: customer.id!,
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: IconButton(
-                                            icon: Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
-                                            ),
-                                            onPressed: () {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (_) => AlertDialog(
-                                                      title: Text("Delete!"),
-                                                      content: Text(
-                                                        "Do you want to delete?",
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed:
-                                                              () => Get.back(),
-                                                          child: Text("Cancel"),
-                                                        ),
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            controller
-                                                                .deleteCustomer(
-                                                                  customer,
-                                                                );
-                                                               
-                                                            Get.back();
-                                                          },
-                                                          child: Text("Ok"),
-                                                        ),
-                                                      ],
-                                                    ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
+                                      TextButton(
+                                        onPressed: () {
+                                          controller.deleteCustomer(customer);
+                                          Get.back();
+                                        },
+                                        child: const Text("Ok"),
+                                      ),
+                                    ],
+                                  ),
+                            );
+                          },
                         ),
                       ),
                     ],
                   ),
                 );
-              }),
-            ],
-          ),
-        ),
-      ),
+              }, childCount: controller.customer.length),
+            ),
+            // Loader at the end
+            // SliverToBoxAdapter(
+            //   child: Obx(() {
+            //     return controller.isloading.value
+            //         ? const Padding(
+            //           padding: EdgeInsets.symmetric(vertical: 20),
+            //           child: Center(child: CircularProgressIndicator()),
+            //         )
+            //         : const SizedBox.shrink();
+            //   }),
+            // ),
+          ],
+        );
+      }),
     );
   }
 }
