@@ -9,7 +9,8 @@ import 'package:customerdata_sqflite/customer/model/transaction_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
+
 import 'package:sqflite/sqflite.dart';
 
 class CustomerController extends GetxController {
@@ -25,16 +26,19 @@ class CustomerController extends GetxController {
     getTransactionList();
     getBankList();
     paginatedData();
-  
+
     scrollController.addListener(_onScrollListner);
     loadAllCustomers();
-    _determinePosition();
+    // _determinePosition();
     // getCurrentLocation();
     super.onInit();
   }
 
-  ScrollController scrollController = ScrollController();
+  // LatLng? selectedLocation;
+  Rx<LatLng?> selectedLocation = Rx<LatLng?>(null);
 
+  ScrollController scrollController = ScrollController();
+  RxBool initLoad = true.obs;
   RxBool isloading = false.obs;
   RxInt limit = 15.obs;
   RxInt offset = 0.obs;
@@ -351,22 +355,19 @@ class CustomerController extends GetxController {
     getBankList();
   }
 
+  RxList<CustomerModel> allCustomers = <CustomerModel>[].obs;
 
-RxList<CustomerModel> allCustomers = <CustomerModel>[].obs;
-
-
-//// getAllCustomers
-Future<void> loadAllCustomers()async{
-allCustomers.value = await getAllCustomers();
-}
+  //// getAllCustomers
+  Future<void> loadAllCustomers() async {
+    allCustomers.value = await getAllCustomers();
+  }
 
   Future<List<CustomerModel>> getAllCustomers() async {
-  final data = await database.rawQuery('SELECT * FROM customer');
-  return data.map((e) => CustomerModel.fromMap(e)).toList();
-}
+    final data = await database.rawQuery('SELECT * FROM customer');
+    return data.map((e) => CustomerModel.fromMap(e)).toList();
+  }
 
-
-  //// fetching all customers data by limit 
+  //// fetching all customers data by limit
   Future<List<CustomerModel>> getCustomerList({
     int limit = 0,
     int offset = 0,
@@ -380,8 +381,7 @@ allCustomers.value = await getAllCustomers();
     return data.map((e) => CustomerModel.fromMap(e)).toList();
   }
 
-
-//// to find total count of the customers
+  //// to find total count of the customers
   Future<int> getTotalCustomerCount() async {
     final result = await database.rawQuery(
       'SELECT customerCode FROM customer ORDER BY id DESC LIMIT 1',
@@ -395,9 +395,7 @@ allCustomers.value = await getAllCustomers();
     }
   }
 
-   
-  
-//// for pagination
+  //// for pagination
   Future<void> paginatedData() async {
     if (isloading.value) return;
     isloading.value = true;
@@ -437,11 +435,12 @@ allCustomers.value = await getAllCustomers();
         selectedPriceCategory.value = transactionModel.priceCategoryName!;
         selectedCountryName.value = transactionModel.country!;
         // taxTreatmentType.value = transactionModel.taxTreatment!;
-          String taxValue = transactionModel.taxTreatment == 'Business to Customer (B2C)'
-          ? '1'
-          : '0';
+        String taxValue =
+            transactionModel.taxTreatment == 'Business to Customer (B2C)'
+                ? '1'
+                : '0';
 
-      updateTaxTreatment(taxValue);
+        updateTaxTreatment(taxValue);
 
         taxNoController.text = transactionModel.taxNumber!;
         creditPeriod.text = transactionModel.creditPeriod!;
@@ -451,7 +450,6 @@ allCustomers.value = await getAllCustomers();
         selectedParty.value = transactionModel.partyIdentificationCode!;
         idNo.text = transactionModel.idNo!;
         salesDiscount.text = transactionModel.salesDiscount!;
-        
       }
     }
   }
@@ -687,7 +685,7 @@ allCustomers.value = await getAllCustomers();
 
     customer.value = newData;
     offset.value = 0;
-   loadAllCustomers();
+    loadAllCustomers();
     getAddressList();
     getPhoneList();
     getEmailList();
@@ -701,7 +699,6 @@ allCustomers.value = await getAllCustomers();
   //   ]);
   //   getCustomerList();
   // }
-
 
   //// delete a customer
   Future<void> deleteCustomer(CustomerModel customerData) async {
@@ -734,7 +731,7 @@ allCustomers.value = await getAllCustomers();
     customer.value = newData;
 
     offset.value = 0;
-   loadAllCustomers();
+    loadAllCustomers();
     getAddressList();
     getPhoneList();
     getEmailList();
@@ -742,11 +739,9 @@ allCustomers.value = await getAllCustomers();
     getBankList();
   }
 
-
-
   void _onScrollListner() {
     if (scrollController.position.atEdge) {
-      if (scrollController.position.pixels != 0 ) {
+      if (scrollController.position.pixels != 0) {
         isloading.value = true;
         offset.value++;
         getPaginatedData(offsetValue: offset.value, limit: limit.value).then((
@@ -773,43 +768,40 @@ allCustomers.value = await getAllCustomers();
     return data.map((e) => CustomerModel.fromMap(e)).toList();
   }
 
-  GoogleMapController? controller;
-  LatLng? pickedLocation;
-  Marker? marker;
-LatLng initialPosition = const LatLng(0,0); 
+  //   GoogleMapController? controller;
+  //   LatLng? pickedLocation;
+  //   Marker? marker;
+  // LatLng initialPosition = const LatLng(0,0);
 
-  Future<void> _determinePosition() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) return;
+  //   Future<void> _determinePosition() async {
+  //     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //     if (!serviceEnabled) return;
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-    if (permission == LocationPermission.deniedForever) return;
+  //     LocationPermission permission = await Geolocator.checkPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       permission = await Geolocator.requestPermission();
+  //     }
+  //     if (permission == LocationPermission.deniedForever) return;
 
-    Position position = await Geolocator.getCurrentPosition();
-   
-     initialPosition = LatLng(position.latitude, position.longitude);
-    
+  //     Position position = await Geolocator.getCurrentPosition();
 
-    controller?.animateCamera(CameraUpdate.newLatLng(initialPosition));
-  }
+  //      initialPosition = LatLng(position.latitude, position.longitude);
 
+  //     controller?.animateCamera(CameraUpdate.newLatLng(initialPosition));
+  //   }
 
-  void onTap(LatLng position) {
-   
-      pickedLocation = position;
-      marker = Marker(
-        markerId: const MarkerId('picked'),
-        position: position,
-      );
-    
+  //   void onTap(LatLng position) {
 
-    // widget.onLocationPicked(position.latitude, position.longitude);
-  }
+  //       pickedLocation = position;
+  //       marker = Marker(
+  //         markerId: const MarkerId('picked'),
+  //         position: position,
+  //       );
 
-//  late Position position;
+  //     // widget.onLocationPicked(position.latitude, position.longitude);
+  //   }
+
+  //  late Position position;
 
   //  Future<void> getCurrentLocation() async {
   //   LocationPermission permission = await Geolocator.checkPermission();
@@ -828,8 +820,5 @@ LatLng initialPosition = const LatLng(0,0);
   //   print('Current Latitude: ${position.latitude}');
   //   print('Current Longitude: ${position.longitude}');
 
-   
- 
   // }
-
 }

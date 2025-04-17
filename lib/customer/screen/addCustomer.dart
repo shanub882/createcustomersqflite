@@ -32,12 +32,17 @@ class CreateCustomerScreen extends StatefulWidget {
 }
 
 class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
-  MapController mapController = Get.put(MapController());
+  // MapController mapController = Get.put(MapController());
   final CustomerController customerController = Get.find<CustomerController>();
 
   final formKey = GlobalKey<FormState>();
   @override
   void initState() {
+    super.initState();
+    initData();
+  }
+
+  Future<void> initData() async {
     final address = customerController.address;
 
     final hasAddress =
@@ -93,40 +98,37 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
     if (widget.edit) {
       customerController.getCustomerData(widget.customerId);
     } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        customerController.customerCode.clear();
-        customerController.ledgernameController.clear();
-        customerController.registerednameController.clear();
-        customerController.registerednameArabicController.clear();
-        customerController.balance.clear();
-        customerController.dateController.clear();
+      customerController.customerCode.clear();
+      customerController.ledgernameController.clear();
+      customerController.registerednameController.clear();
+      customerController.registerednameArabicController.clear();
+      customerController.balance.clear();
+      customerController.dateController.clear();
 
-        customerController.dateController.text = DateFormat(
-          'dd/MM/yyyy',
-        ).format(DateTime.now());
+      customerController.dateController.text = DateFormat(
+        'dd/MM/yyyy',
+      ).format(DateTime.now());
 
-        customerController.balance.text = 0.toString();
+      customerController.balance.text = 0.toString();
 
-        customerController.creditLimit.clear();
-        customerController.creditPeriod.clear();
-        customerController.idNo.clear();
-        customerController.salesDiscount.clear();
-        customerController.billwise.value = false;
-        customerController.isactive.value = false;
-        customerController.taxNoController.clear();
+      customerController.creditLimit.clear();
+      customerController.creditPeriod.clear();
+      customerController.idNo.clear();
+      customerController.salesDiscount.clear();
+      customerController.billwise.value = false;
+      customerController.isactive.value = false;
+      customerController.taxNoController.clear();
 
-        customerController.ismorecontact.value = false;
-        customerController.ismoretransaction.value = false;
-        customerController.ismorebank.value = false;
+      customerController.ismorecontact.value = false;
+      customerController.ismoretransaction.value = false;
+      customerController.ismorebank.value = false;
 
-        final lastCustomer = await customerController.getTotalCustomerCount();
-        print('length${customerController.customer.length}');
-        print('last customer$lastCustomer');
-        customerController.customerCode.text = lastCustomer.toString();
-      });
+      final lastCustomer = await customerController.getTotalCustomerCount();
+      print('length${customerController.customer.length}');
+      print('last customer$lastCustomer');
+      customerController.customerCode.text = lastCustomer.toString();
     }
-
-    super.initState();
+    // customerController.initLoad.value = false;
   }
 
   final FocusNode customercodeFocus = FocusNode();
@@ -300,15 +302,14 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
           decoration: newDesignTextfield(hintText: 'Registered Name (Arabic)'),
         ),
         SizedBox(height: screenSize.height * 0.02),
-        Obx(
-          () {
-            final latLng = mapController.selectedLocation.value;
-             
-            return Row(
+        Obx(() {
+          final latLng = customerController.selectedLocation.value;
+
+          return Row(
             children: [
               Expanded(
-                child: Text(latLng != null ?
-                  "Latitude: ${latLng.latitude}":'Latitude',
+                child: Text(
+                  latLng != null ? "Latitude: ${latLng.latitude}" : 'Latitude',
                   style: customiseStyle(
                     const Color(0xFFFFFFFF),
                     FontWeight.w500,
@@ -319,8 +320,9 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
               SizedBox(width: screenSize.width * 0.05),
               Expanded(
                 child: Text(
-                  latLng !=null ?
-                  "Longitude: ${latLng.longitude}":'Longitude',
+                  latLng != null
+                      ? "Longitude: ${latLng.longitude}"
+                      : 'Longitude',
                   style: customiseStyle(
                     const Color(0xFFFFFFFF),
                     FontWeight.w500,
@@ -339,10 +341,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
               ),
             ],
           );
-        
-          }
-         
-           ),
+        }),
 
         SizedBox(height: screenSize.height * 0.02),
 

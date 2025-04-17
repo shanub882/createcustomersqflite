@@ -1,10 +1,10 @@
-
+import 'package:customerdata_sqflite/customer/controller/customerController.dart';
 import 'package:customerdata_sqflite/customer/controller/googleMapsController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 
 import 'package:get/get.dart';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
 
 class PickLocation extends StatefulWidget {
   const PickLocation({super.key});
@@ -14,64 +14,57 @@ class PickLocation extends StatefulWidget {
 }
 
 class _PickLocationState extends State<PickLocation> {
-   MapController mapController = Get.put(MapController());
+  CustomerController controller = Get.put(CustomerController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: 
-        GoogleMap(
-          onMapCreated: mapController.onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: mapController.coordinates.first,
-            zoom: 10,
-          ),
-          markers: mapController.markers.toSet(),
-          onTap: mapController.onMapTapped, // Capture tap location
+      body: FlutterMap(
+        options: MapOptions(
+          initialCenter: LatLng(11.266602804066853, 75.77895225222007),
+          initialZoom: 13.0,
+          // center: LatLng(24.7136, 46.6753), // Default center (Riyadh)
+          // zoom: 13.0,
+          onTap: (tapPosition, point) {
+            controller.selectedLocation.value = point;
+          },
         ),
-      
-          // Container(
-          //   padding: const EdgeInsets.all(10),
-          //   child: Obx(() {
-          //     final latLng = mapController.selectedLocation.value;
-          //     return Text(
-          //       latLng != null
-          //           ? "Location: ${latLng.latitude}, ${latLng.longitude}"
-          //           : "Tap on the map to select a location",
-          //       style: const TextStyle(fontSize: 16),
-          //     );
-          //   }),
-          // ),
+        children: [
+          TileLayer(
+            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            subdomains: ['a', 'b', 'c'],
+          ),
+          if (controller.selectedLocation.value != null)
+            Obx(() {
+              final location = controller.selectedLocation.value;
+              if (location == null) return const SizedBox();
 
+              return MarkerLayer(
+                markers: [
+                  Marker(
+                    point: location,
+                    width: 80,
+                    height: 80,
+                    child: Icon(
+                      Icons.location_pin,
+                      color: Colors.red,
+                      size: 40,
+                    ),
+                  ),
+                ],
+              );
+            }),
+        ],
+      ),
+
+      // GoogleMap(
+      //   onMapCreated: mapController.onMapCreated,
+      //   initialCameraPosition: CameraPosition(
+      //     target: mapController.coordinates.first,
+      //     zoom: 10,
+      //   ),
+      //   markers: mapController.markers.toSet(),
+      //   onTap: mapController.onMapTapped, // Capture tap location
+      // ),
     );
   }
 }
-
-
-// class MarkerDetailsScreen extends StatelessWidget {
-//   final String title;
-//   final LatLng position;
- 
-//   const MarkerDetailsScreen({super.key, required this.title, required this.position});
- 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text(title)),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text("Location: ${position.latitude}, ${position.longitude}",
-//                 style: TextStyle(fontSize: 18)),
-//             SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: () => Navigator.pop(context),
-//               child: Text("Back to Map"),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// },
-   
