@@ -1,6 +1,5 @@
 import 'package:customerdata_sqflite/customer/controller/customerController.dart';
 import 'package:customerdata_sqflite/customer/controller/googleMapsController.dart';
-
 import 'package:customerdata_sqflite/customer/global/global.dart';
 import 'package:customerdata_sqflite/customer/model/address_model.dart';
 import 'package:customerdata_sqflite/customer/model/customer_model.dart';
@@ -32,104 +31,70 @@ class CreateCustomerScreen extends StatefulWidget {
 }
 
 class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
-  // MapController mapController = Get.put(MapController());
+  Mapcontroller mapController = Get.put(Mapcontroller());
   final CustomerController customerController = Get.find<CustomerController>();
 
   final formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
-    initData();
+    Future.delayed(Duration.zero,() =>
+    initData());
   }
 
   Future<void> initData() async {
-    final address = customerController.address;
+  final customerId = widget.edit ? widget.customerId : 0;
 
-    final hasAddress =
-        widget.edit
-            ? address.any((element) => element.customerId == widget.customerId)
-            : address.any((element) => element.customerId == 0);
-    if (!hasAddress) {
-      customerController.addAddress(
-        customerId: widget.edit ? widget.customerId : 0,
-      );
-    }
 
-    final phone = customerController.phone;
-
-    final hasPhone =
-        widget.edit
-            ? phone.any((element) => element.customerId == widget.customerId)
-            : phone.any((element) => element.customerId == 0);
-    if (!hasPhone) {
-      customerController.addPhone(
-        customerId: widget.edit ? widget.customerId : 0,
-      );
-    }
-
-    final email = customerController.email;
-
-    final hasEmail =
-        widget.edit
-            ? email.any((element) => element.customerId == widget.customerId)
-            : email.any((element) => element.customerId == 0);
-    if (!hasEmail) {
-      customerController.addemail(
-        customerId: widget.edit ? widget.customerId : 0,
-      );
-    }
-
-    final banks = customerController.bank;
-
-    final hasBanks =
-        widget.edit
-            ? banks.any((bank) => bank.customerId == widget.customerId)
-            : banks.any((bank) => bank.customerId == 0);
-
-    if (!hasBanks) {
-      customerController.addBank(
-        customerId: widget.edit ? widget.customerId : 0,
-      );
-    }
-
-    customerController.selectedTaxTreatmentText.value = '1';
-    customerController.taxId.value = "1";
-
-    if (widget.edit) {
-      customerController.getCustomerData(widget.customerId);
-    } else {
-      customerController.customerCode.clear();
-      customerController.ledgernameController.clear();
-      customerController.registerednameController.clear();
-      customerController.registerednameArabicController.clear();
-      customerController.balance.clear();
-      customerController.dateController.clear();
-
-      customerController.dateController.text = DateFormat(
-        'dd/MM/yyyy',
-      ).format(DateTime.now());
-
-      customerController.balance.text = 0.toString();
-
-      customerController.creditLimit.clear();
-      customerController.creditPeriod.clear();
-      customerController.idNo.clear();
-      customerController.salesDiscount.clear();
-      customerController.billwise.value = false;
-      customerController.isactive.value = false;
-      customerController.taxNoController.clear();
-
-      customerController.ismorecontact.value = false;
-      customerController.ismoretransaction.value = false;
-      customerController.ismorebank.value = false;
-
-      final lastCustomer = await customerController.getTotalCustomerCount();
-      print('length${customerController.customer.length}');
-      print('last customer$lastCustomer');
-      customerController.customerCode.text = lastCustomer.toString();
-    }
-    // customerController.initLoad.value = false;
+  if (!customerController.address.any((e) => e.customerId == customerId)) {
+    customerController.addAddress(customerId: customerId);
   }
+
+  if (!customerController.phone.any((e) => e.customerId == customerId)) {
+    customerController.addPhone(customerId: customerId);
+  }
+
+  if (!customerController.email.any((e) => e.customerId == customerId)) {
+    customerController.addemail(customerId: customerId);
+  }
+
+  if (!customerController.bank.any((e) => e.customerId == customerId)) {
+    customerController.addBank(customerId: customerId);
+  }
+
+
+  customerController.selectedTaxTreatmentText.value = '1';
+  customerController.taxId.value = "1";
+
+  if (widget.edit) {
+    await customerController.getCustomerData(widget.customerId);
+  } else {
+    customerController.customerCode.clear();
+    customerController.ledgernameController.clear();
+    customerController.registerednameController.clear();
+    customerController.registerednameArabicController.clear();
+    customerController.balance.clear();
+    customerController.dateController.clear();
+    customerController.dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    customerController.balance.text = "0";
+
+    customerController.creditLimit.clear();
+    customerController.creditPeriod.clear();
+    customerController.idNo.clear();
+    customerController.salesDiscount.clear();
+    customerController.billwise.value = false;
+    customerController.isactive.value = false;
+    customerController.taxNoController.clear();
+
+    customerController.ismorecontact.value = false;
+    customerController.ismoretransaction.value = false;
+    customerController.ismorebank.value = false;
+
+    
+    final lastCustomer = await customerController.getTotalCustomerCount();
+    customerController.customerCode.text = lastCustomer.toString();
+  }
+}
 
   final FocusNode customercodeFocus = FocusNode();
   final FocusNode ledgerNameFocus = FocusNode();
@@ -303,7 +268,7 @@ class _CreateCustomerScreenState extends State<CreateCustomerScreen> {
         ),
         SizedBox(height: screenSize.height * 0.02),
         Obx(() {
-          final latLng = customerController.selectedLocation.value;
+          final latLng = mapController.selectedLocation.value;
 
           return Row(
             children: [

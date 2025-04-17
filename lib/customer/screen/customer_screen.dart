@@ -22,7 +22,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
         centerTitle: true,
         title: InkWell(
           onTap: () {
-            Get.to(() => CreateCustomerScreen(edit: false, customerId: 0));
+
+           Future.microtask(() {
+    Get.to(() => CreateCustomerScreen(edit: false, customerId: 0));
+  });
+
+            // Get.to(() => CreateCustomerScreen(edit: false, customerId: 0));
           },
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,

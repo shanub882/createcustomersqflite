@@ -7,10 +7,7 @@ import 'package:customerdata_sqflite/customer/model/email_model.dart';
 import 'package:customerdata_sqflite/customer/model/phone_model.dart';
 import 'package:customerdata_sqflite/customer/model/transaction_model.dart';
 import 'package:flutter/widgets.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:latlong2/latlong.dart';
-
 import 'package:sqflite/sqflite.dart';
 
 class CustomerController extends GetxController {
@@ -34,8 +31,8 @@ class CustomerController extends GetxController {
     super.onInit();
   }
 
-  // LatLng? selectedLocation;
-  Rx<LatLng?> selectedLocation = Rx<LatLng?>(null);
+
+  // Rx<LatLng?> selectedLocation = Rx<LatLng?>(null);
 
   ScrollController scrollController = ScrollController();
   RxBool initLoad = true.obs;
